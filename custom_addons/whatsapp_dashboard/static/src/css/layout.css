@@ -1,0 +1,396 @@
+/* ================================================================
+   layout.css — WhatsApp Dashboard · Odoo 19
+   ----------------------------------------------------------------
+   Outer container, module header bar, and the two-column body
+   split (thread-list panel | chat panel).
+   Odoo's own sidebar is NOT touched — this module fills only the
+   content area that Odoo puts to the right of its sidebar.
+   ================================================================ */
+
+
+/* ── CSS custom properties (scoped to the component root) ───── */
+.wa-root {
+    /* WhatsApp brand colours */
+    --wa-green:          #25D366;
+    --wa-green-dark:     #128C7E;
+    --wa-green-bubble:   #d9fdd3;
+
+    /* Surfaces */
+    --wa-chat-bg:        #efeae2;
+    --wa-sidebar-bg:     #ffffff;
+    --wa-header-bg:      #ffffff;
+
+    /* Text */
+    --wa-text:           #111b21;
+    --wa-text-muted:     #667781;
+
+    /* Accents */
+    --wa-border:         #e9edef;
+    --wa-blue-ticks:     #53bdeb;
+    --wa-red:            #f15c6d;
+    --wa-icon:           #54656f;
+    --wa-internal-yel:   #f9a825;
+
+    font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont,
+                 'Helvetica Neue', Arial, sans-serif;
+    color: var(--wa-text);
+}
+
+
+/* ═══════════════════════════════════════════════════════════════
+   ODOO-STYLE PURPLE SIDEBAR (inside WhatsApp Dashboard)
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Override wa-root to be a row (odoo sidebar + existing layout) */
+.wa-root {
+    flex-direction: row !important;
+}
+
+/* Odoo sidebar wrapper */
+.wa-odoo-sidebar {
+    width: 220px;
+    min-width: 220px;
+    background: #2c2060;
+    display: flex;
+    flex-direction: column;
+    flex-shrink: 0;
+    overflow: hidden;
+    transition: width .25s cubic-bezier(.4,0,.2,1), min-width .25s cubic-bezier(.4,0,.2,1);
+    position: relative;
+    z-index: 5;
+}
+
+.wa-odoo-sidebar--collapsed {
+    width: 56px;
+    min-width: 56px;
+}
+
+/* Inner wrapper that holds header + nav (keeps content from wrapping ugly) */
+.wa-odoo-sidebar-inner {
+    display: flex;
+    flex-direction: column;
+    width: 220px; /* fixed so text doesn't reflow during animation */
+    height: 100%;
+    overflow: hidden;
+}
+
+/* ── Sidebar header (odoo logo row) ────────────────────────── */
+.wa-odoo-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 0 14px;
+    height: 56px;
+    flex-shrink: 0;
+    border-bottom: 1px solid rgba(255,255,255,.08);
+}
+
+.wa-odoo-logo-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    background: #875bcc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    flex-shrink: 0;
+    border: none;
+    transition: background .15s;
+}
+.wa-odoo-logo-btn:hover { background: #9b6edf; }
+
+.wa-odoo-brand {
+    font-size: 17px;
+    font-weight: 700;
+    color: #fff;
+    letter-spacing: -.3px;
+    white-space: nowrap;
+    opacity: 1;
+    transition: opacity .2s;
+}
+
+.wa-odoo-sidebar--collapsed .wa-odoo-brand {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* ── Collapse toggle button ─────────────────────────────────── */
+.wa-odoo-toggle {
+    position: absolute;
+    top: 16px;
+    right: -13px;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: #fff;
+    border: 1px solid #e0e0e0;
+    box-shadow: 0 1px 4px rgba(0,0,0,.18);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 10;
+    transition: background .15s;
+    color: #2c2060;
+    flex-shrink: 0;
+}
+.wa-odoo-toggle:hover { background: #f0f0f0; }
+.wa-odoo-toggle svg  { transition: transform .25s; }
+.wa-odoo-sidebar--collapsed .wa-odoo-toggle svg { transform: rotate(180deg); }
+
+/* ── Nav items ──────────────────────────────────────────────── */
+.wa-odoo-nav {
+    flex: 1;
+    padding: 8px 0;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+.wa-odoo-nav::-webkit-scrollbar { width: 0; }
+
+.wa-odoo-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 9px 14px;
+    cursor: pointer;
+    border-radius: 6px;
+    margin: 1px 6px;
+    transition: background .13s;
+    white-space: nowrap;
+    min-height: 40px;
+    position: relative;
+    border: none;
+    background: transparent;
+    width: calc(100% - 12px);
+    text-align: left;
+    color: rgba(255,255,255,.75);
+}
+
+.wa-odoo-nav-item:hover {
+    background: rgba(255,255,255,.1);
+    color: #fff;
+}
+
+.wa-odoo-nav-item--active {
+    background: rgba(255,255,255,.15) !important;
+    color: #fff !important;
+}
+
+.wa-odoo-nav-icon {
+    width: 20px;
+    height: 20px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: inherit;
+}
+
+.wa-odoo-nav-label {
+    font-size: 14px;
+    font-weight: 500;
+    color: inherit;
+    opacity: 1;
+    transition: opacity .18s;
+    white-space: nowrap;
+}
+
+.wa-odoo-sidebar--collapsed .wa-odoo-nav-label {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Tooltip on collapsed */
+.wa-odoo-sidebar--collapsed .wa-odoo-nav-item:hover::after {
+    content: attr(data-label);
+    position: absolute;
+    left: 52px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #1a1040;
+    color: #fff;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 5px;
+    white-space: nowrap;
+    pointer-events: none;
+    box-shadow: 0 2px 8px rgba(0,0,0,.3);
+    z-index: 999;
+}
+
+
+/* ── Root shell ─────────────────────────────────────────────── */
+/*
+   Fits inside Odoo's content area.
+   110px ≈ Odoo topbar (56px) + breadcrumb row (~54px).
+*/
+.wa-root {
+    display: flex;
+    flex-direction: row;   /* already set above, but keep for clarity */
+    height: calc(100vh - 110px);
+    min-height: 500px;
+    background: var(--wa-sidebar-bg);
+    border: 1px solid var(--wa-border);
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 1px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* The main content area (header + body) */
+.wa-odoo-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    min-width: 0;
+}
+
+
+/* ── Module header (WhatsApp logo · Connected · Config) ─────── */
+.wa-module-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 20px;
+    height: 58px;
+    background: var(--wa-header-bg);
+    border-bottom: 1px solid var(--wa-border);
+    flex-shrink: 0;
+    z-index: 10;
+}
+
+.wa-module-header-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.wa-header-logo {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.wa-module-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--wa-text);
+    letter-spacing: -0.2px;
+}
+
+.wa-module-header-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Green "Connected" indicator dot */
+.wa-connected-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--wa-green);
+    flex-shrink: 0;
+    box-shadow: 0 0 0 2px rgba(37, 211, 102, 0.2);
+}
+
+.wa-connected-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--wa-green-dark);
+}
+
+/* Configuration button */
+.wa-config-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border: 1px solid var(--wa-border);
+    border-radius: 6px;
+    background: transparent;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--wa-text);
+    cursor: pointer;
+    transition: background 0.15s;
+    white-space: nowrap;
+}
+.wa-config-btn:hover { background: #f5f6f7; }
+
+/* Generic small icon button (circle) */
+.wa-icon-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    border: none;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--wa-icon);
+    cursor: pointer;
+    transition: background 0.15s;
+    flex-shrink: 0;
+    padding: 0;
+}
+.wa-icon-btn:hover  { background: #f0f2f5; }
+.wa-icon-btn--lg    { width: 38px; height: 38px; }
+
+
+/* ── Two-column body ─────────────────────────────────────────── */
+.wa-body {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+}
+
+/* Left column — thread / contact list */
+.wa-sidebar {
+    width: 380px;
+    min-width: 280px;
+    max-width: 380px;
+    display: flex;
+    flex-direction: column;
+    background: var(--wa-sidebar-bg);
+    border-right: 1px solid var(--wa-border);
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+/* Right column — chat messages */
+.wa-chat {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    position: relative;          /* needed for floating attachment menu & info panel */
+    background-color: var(--wa-chat-bg);
+    /* subtle WhatsApp dot pattern */
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80'%3E%3Cg opacity='.06' fill='%23aaa'%3E%3Cpath d='M40 20a1 1 0 1 0 0-2 1 1 0 0 0 0 2zM20 40a1 1 0 1 0 0-2 1 1 0 0 0 0 2zM60 40a1 1 0 1 0 0-2 1 1 0 0 0 0 2zM40 60a1 1 0 1 0 0-2 1 1 0 0 0 0 2z'/%3E%3C/g%3E%3C/svg%3E");
+}
+
+
+/* ── Responsive ──────────────────────────────────────────────── */
+@media (max-width: 900px) {
+    .wa-sidebar { width: 280px; min-width: 240px; }
+}
+
+@media (max-width: 640px) {
+    .wa-root    { border-radius: 0; height: calc(100vh - 60px); }
+    .wa-sidebar {
+        display: none;
+        position: absolute;
+        z-index: 100;
+        height: 100%; top: 0; left: 0;
+        width: 100%; max-width: 100%;
+    }
+    .wa-module-header   { padding: 0 12px; }
+    .wa-connected-label { display: none; }
+}
