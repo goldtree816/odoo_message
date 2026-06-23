@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo noupdate="1">
+    <data>
+
+        <!-- ── Threads ──────────────────────────────────────────── -->
+
+        <!-- Existing demo threads -->
+        <record id="thread_azure" model="whatsapp.thread">
+            <field name="name">Azure Interiors</field>
+            <field name="avatar_color">#25D366</field>
+            <field name="phone">+1 555 0101</field>
+            <field name="last_message">Thank you! Please share the quotation.</field>
+            <field name="last_message_date" eval="DateTime.now()"/>
+            <field name="unread_count">2</field>
+            <field name="status">online</field>
+            <field name="thread_type">external</field>
+        </record>
+
+        <record id="thread_global" model="whatsapp.thread">
+            <field name="name">Global Solutions</field>
+            <field name="avatar_color">#128C7E</field>
+            <field name="phone">+1 555 0202</field>
+            <field name="last_message">We are looking for 20 units.</field>
+            <field name="last_message_date" eval="DateTime.now()"/>
+            <field name="unread_count">1</field>
+            <field name="status">offline</field>
+            <field name="thread_type">external</field>
+        </record>
+
+        <record id="thread_green" model="whatsapp.thread">
+            <field name="name">Green Planet Co.</field>
+            <field name="avatar_color">#34B7F1</field>
+            <field name="phone">+1 555 0303</field>
+            <field name="last_message">When will the order be delivered?</field>
+            <field name="last_message_date" eval="DateTime.now()"/>
+            <field name="unread_count">0</field>
+            <field name="status">offline</field>
+            <field name="thread_type">external</field>
+        </record>
+
+        <record id="thread_star" model="whatsapp.thread">
+            <field name="name">Star Technologies</field>
+            <field name="avatar_color">#FF6B35</field>
+            <field name="phone">+1 555 0404</field>
+            <field name="last_message">Please check the attachment.</field>
+            <field name="last_message_date" eval="DateTime.now()"/>
+            <field name="unread_count">3</field>
+            <field name="status">offline</field>
+            <field name="thread_type">external</field>
+        </record>
+
+        <record id="thread_modern" model="whatsapp.thread">
+            <field name="name">Modern Home</field>
+            <field name="avatar_color">#6C5CE7</field>
+            <field name="phone">+1 555 0505</field>
+            <field name="last_message">Thanks for the update!</field>
+            <field name="last_message_date" eval="DateTime.now()"/>
+            <field name="unread_count">0</field>
+            <field name="status">offline</field>
+            <field name="thread_type">internal</field>
+        </record>
+
+        <record id="thread_bright" model="whatsapp.thread">
+            <field name="name">Bright Retail</field>
+            <field name="avatar_color">#E17055</field>
+            <field name="phone">+1 555 0606</field>
+            <field name="last_message">Can we schedule a demo?</field>
+            <field name="last_message_date" eval="DateTime.now()"/>
+            <field name="unread_count">0</field>
+            <field name="status">offline</field>
+            <field name="thread_type">external</field>
+        </record>
+
+        <record id="thread_next" model="whatsapp.thread">
+            <field name="name">Next Wave LLC</field>
+            <field name="avatar_color">#00B894</field>
+            <field name="phone">+1 555 0707</field>
+            <field name="last_message">Looking forward to working together.</field>
+            <field name="last_message_date" eval="DateTime.now()"/>
+            <field name="unread_count">0</field>
+            <field name="status">offline</field>
+            <field name="thread_type">internal</field>
+        </record>
+
+        <!-- ═══ NEW: YOUR PHONE NUMBER THREAD ═══ -->
+        <record id="thread_my_number" model="whatsapp.thread">
+            <field name="name">My Number</field>
+            <field name="avatar_color">#FF6B35</field>
+            <field name="phone">+9779819059190</field>
+            <field name="last_message">Hello from Odoo!</field>
+            <field name="last_message_date" eval="DateTime.now()"/>
+            <field name="unread_count">0</field>
+            <field name="status">offline</field>
+            <field name="thread_type">external</field>
+        </record>
+
+        <!-- ── Messages ──────────────────────────────────────────── -->
+
+        <!-- Existing messages for Azure Interiors -->
+        <record id="msg_a1" model="whatsapp.message">
+            <field name="thread_id" ref="thread_azure"/>
+            <field name="body">Hello, I'm interested in your office furniture collection.</field>
+            <field name="direction">incoming</field>
+            <field name="message_type">external</field>
+            <field name="status">read</field>
+            <field name="timestamp" eval="DateTime.now()"/>
+        </record>
+
+        <record id="msg_a2" model="whatsapp.message">
+            <field name="thread_id" ref="thread_azure"/>
+            <field name="body">Hello! Thanks for reaching out to us. How can I help you today?</field>
+            <field name="direction">outgoing</field>
+            <field name="message_type">external</field>
+            <field name="status">read</field>
+            <field name="timestamp" eval="DateTime.now()"/>
+        </record>
+
+        <record id="msg_a3" model="whatsapp.message">
+            <field name="thread_id" ref="thread_azure"/>
+            <field name="body">I need a quotation for 10 office chairs and 5 meeting tables.</field>
+            <field name="direction">incoming</field>
+            <field name="message_type">external</field>
+            <field name="status">read</field>
+            <field name="timestamp" eval="DateTime.now()"/>
+        </record>
+
+        <record id="msg_a4" model="whatsapp.message">
+            <field name="thread_id" ref="thread_azure"/>
+            <field name="body">Sure, I can help you with that. Could you please share your email address so I can send the quotation?</field>
+            <field name="direction">outgoing</field>
+            <field name="message_type">external</field>
+            <field name="status">read</field>
+            <field name="timestamp" eval="DateTime.now()"/>
+        </record>
+
+        <record id="msg_a5" model="whatsapp.message">
+            <field name="thread_id" ref="thread_azure"/>
+            <field name="body">Thank you! Please share the quotation.</field>
+            <field name="direction">incoming</field>
+            <field name="message_type">external</field>
+            <field name="status">delivered</field>
+            <field name="timestamp" eval="DateTime.now()"/>
+        </record>
+
+        <!-- Messages for Global Solutions -->
+        <record id="msg_g1" model="whatsapp.message">
+            <field name="thread_id" ref="thread_global"/>
+            <field name="body">Hi, we are looking for 20 units of your premium chairs.</field>
+            <field name="direction">incoming</field>
+            <field name="message_type">external</field>
+            <field name="status">read</field>
+            <field name="timestamp" eval="DateTime.now()"/>
+        </record>
+
+        <record id="msg_g2" model="whatsapp.message">
+            <field name="thread_id" ref="thread_global"/>
+            <field name="body">Of course! Let me prepare a bulk quotation for you right away.</field>
+            <field name="direction">outgoing</field>
+            <field name="message_type">external</field>
+            <field name="status">read</field>
+            <field name="timestamp" eval="DateTime.now()"/>
+        </record>
+
+        <record id="msg_g3" model="whatsapp.message">
+            <field name="thread_id" ref="thread_global"/>
+            <field name="body">We are looking for 20 units.</field>
+            <field name="direction">incoming</field>
+            <field name="message_type">external</field>
+            <field name="status">delivered</field>
+            <field name="timestamp" eval="DateTime.now()"/>
+        </record>
+
+        <!-- ═══ NEW: Messages for your phone number thread ═══ -->
+        <record id="msg_m1" model="whatsapp.message">
+            <field name="thread_id" ref="thread_my_number"/>
+            <field name="body">Hey, this is a test message from your Odoo WhatsApp dashboard!</field>
+            <field name="direction">outgoing</field>
+            <field name="message_type">external</field>
+            <field name="status">sent</field>
+            <field name="timestamp" eval="DateTime.now()"/>
+        </record>
+
+        <record id="msg_m2" model="whatsapp.message">
+            <field name="thread_id" ref="thread_my_number"/>
+            <field name="body">Great! I received your message.</field>
+            <field name="direction">incoming</field>
+            <field name="message_type">external</field>
+            <field name="status">read</field>
+            <field name="timestamp" eval="DateTime.now()"/>
+        </record>
+
+    </data>
+</odoo>
