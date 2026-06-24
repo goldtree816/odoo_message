@@ -4,25 +4,19 @@ import base64
 import requests
 from requests.auth import HTTPBasicAuth
 
-from odoo import http, fields, tools
+from odoo import http, fields
 from odoo.http import request
 
 _logger = logging.getLogger(__name__)
 
-
-# ── Read Twilio credentials from odoo.conf ──────────────────────────────────
-def _get_twilio_config():
-    """Read Twilio credentials from Odoo configuration file.
-       Add these to your odoo.conf:
-         twilio_account_sid = AC...
-         twilio_auth_token  = ...
-         twilio_from        = whatsapp:+14155238886
-    """
-    return {
-        'account_sid': tools.config.get('twilio_account_sid'),
-        'auth_token':  tools.config.get('twilio_auth_token'),
-        'from':        tools.config.get('twilio_from', 'whatsapp:+14155238886'),
-    }
+# ── Twilio sandbox credentials ──────────────────────────────────────────────
+TWILIO_ACCOUNT_SID = 'abcd'
+TWILIO_AUTH_TOKEN  = 'abcd '
+TWILIO_FROM        = '123456'   # Twilio sandbox number
+TWILIO_API_URL     = (
+    f'https://api.twilio.com/2010-04-01/Accounts/'
+    f'{TWILIO_ACCOUNT_SID}/Messages.json'
+)
 
 
 def _send_via_twilio(to_phone, body, media_url=None):
@@ -30,18 +24,9 @@ def _send_via_twilio(to_phone, body, media_url=None):
     POST an outgoing WhatsApp message through the Twilio sandbox.
     If media_url is provided, it sends a media message with optional body.
     """
-    config = _get_twilio_config()
-    if not config['account_sid'] or not config['auth_token']:
-        _logger.error('Twilio credentials not configured in odoo.conf')
-        return None
-
     to_wa = f'whatsapp:{to_phone}' if not to_phone.startswith('whatsapp:') else to_phone
-    api_url = (
-        f'https://api.twilio.com/2010-04-01/Accounts/'
-        f'{config["account_sid"]}/Messages.json'
-    )
     data = {
-        'From': config['from'],
+        'From': TWILIO_FROM,
         'To': to_wa,
         'Body': body,
     }
@@ -50,9 +35,9 @@ def _send_via_twilio(to_phone, body, media_url=None):
 
     try:
         resp = requests.post(
-            api_url,
+            TWILIO_API_URL,
             data=data,
-            auth=HTTPBasicAuth(config['account_sid'], config['auth_token']),
+            auth=HTTPBasicAuth(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN),
             timeout=10,
         )
         if resp.status_code in (200, 201):

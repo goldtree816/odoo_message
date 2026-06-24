@@ -84,7 +84,9 @@ function randomReply() {
 
 export class WhatsAppDashboard extends Component {
     static template = "whatsapp_dashboard.WhatsAppDashboard";
-    static props    = {};
+    static props    = {
+        '*': true,   // FIX: allow any props (Odoo passes action, actionId, etc.)
+    };
 
     setup() {
         // ── Odoo services ──────────────────────────────────────────────────
@@ -95,7 +97,7 @@ export class WhatsAppDashboard extends Component {
         this.messagesRef = useRef("messages");
 
         // Private: file attachment ID pending send
-        this._pendingMediaId = null;   // <-- NEW
+        this._pendingMediaId = null;
 
         // ── Reactive state ─────────────────────────────────────────────────
         this.state = useState({
@@ -120,16 +122,16 @@ export class WhatsAppDashboard extends Component {
             speakerOn:      false,
             cameraOff:      false,
 
-            // ── SIDEBAR STATE (new) ──
+            // ── SIDEBAR STATE ──
             sidebarCollapsed: false,
-            activeNavItem: "crm",   // default highlighted item
+            activeNavItem: "crm",
         });
 
         // Private: call timer + poll intervals
         this._callInterval = null;
         this._pollInterval = null;
         this._callSeconds  = 0;
-        this._lastMsgId    = 0;     // highest message id seen (for polling)
+        this._lastMsgId    = 0;
 
         onMounted(()     => this._init());
         onWillUnmount(() => this._cleanup());
@@ -139,11 +141,8 @@ export class WhatsAppDashboard extends Component {
     // ── Initialisation ───────────────────────────────────────────────────────
 
     async _init() {
-        // Show seed data instantly so the UI feels fast
         this.state.threads = [...SEED_THREADS];
-        // Then replace with real server data
         await this._loadThreads();
-        // Poll every 8 s for incoming Twilio messages
         this._pollInterval = setInterval(() => this._poll(), 8000);
     }
 
@@ -169,10 +168,6 @@ export class WhatsAppDashboard extends Component {
         }
     }
 
-    /**
-     * Computed getter: applies search query and active filter tab.
-     * OWL re-renders automatically when state properties it reads change.
-     */
     get filteredThreads() {
         const q = this.state.searchQuery.toLowerCase().trim();
         return this.state.threads.filter((t) => {
@@ -201,15 +196,12 @@ export class WhatsAppDashboard extends Component {
         this.state.msgType        = "external";
         this.state.messages       = SEED_MESSAGES[thread.id] || [];
         this._lastMsgId           = 0;
-        this._pendingMediaId      = null;   // reset pending file
+        this._pendingMediaId      = null;
 
-        // Clear badge locally
         const t = this.state.threads.find((x) => x.id === thread.id);
         if (t) t.unread = 0;
 
         await this._loadMessages(thread.id);
-
-        // Fire-and-forget mark-read
         this.rpc("/whatsapp_dashboard/mark_read", { thread_id: thread.id }).catch(() => {});
     }
 
@@ -251,7 +243,7 @@ export class WhatsAppDashboard extends Component {
     setFilter(tab) { this.state.activeFilter = tab; }
 
 
-    // ── Message type (external ↔ internal note) ───────────────────────────────
+    // ── Message type toggle ─────────────────────────────────────────────────
 
     toggleMsgType() {
         this.state.msgType = this.state.msgType === "external" ? "internal" : "external";
@@ -266,7 +258,7 @@ export class WhatsAppDashboard extends Component {
 
         const finalBody = body || '📎 Attachment';
 
-        // 1. Optimistic UI — show the message instantly
+        // Optimistic UI
         const optimistic = {
             id:        Date.now(),
             body:      finalBody,
@@ -279,16 +271,13 @@ export class WhatsAppDashboard extends Component {
         this.state.draftMessage = "";
         this._scrollToBottom();
 
-        // Update thread preview row
         const t = this.state.threads.find((x) => x.id === this.state.activeThread.id);
         if (t) { t.last_message = finalBody; t.time = currentTime(); }
 
-        // 2. For external messages simulate a reply locally (UX only) – only if no media
         if (this.state.msgType === "external" && !this._pendingMediaId) {
             this._simulateReply();
         }
 
-        // 3. Persist to server (Twilio send is done there)
         try {
             const res = await this.rpc("/whatsapp_dashboard/send_message", {
                 thread_id: this.state.activeThread.id,
@@ -299,12 +288,10 @@ export class WhatsAppDashboard extends Component {
             if (res && res.twilio_sid) {
                 this.notification.add("Message sent via WhatsApp", { type: "success", sticky: false });
             }
-            // Clear pending media after successful send
             this._pendingMediaId = null;
         } catch (_) {}
     }
 
-    /** Send on Enter (Shift+Enter = newline) */
     onKeyDown(ev) {
         if (ev.key === "Enter" && !ev.shiftKey) {
             ev.preventDefault();
@@ -362,7 +349,6 @@ export class WhatsAppDashboard extends Component {
                 const result = await response.json();
                 if (result.attachment_id) {
                     this._pendingMediaId = result.attachment_id;
-                    // Optionally show a notification or set draft message
                     this.state.draftMessage = this.state.draftMessage || '📎 ';
                     this.notification.add(`File "${file.name}" ready to send.`, { type: 'success' });
                 } else {
@@ -410,7 +396,6 @@ export class WhatsAppDashboard extends Component {
         this._startRinging();
     }
 
-    /** Simulate a 2.5 s "ringing" then switch to "Connected" + start timer */
     _startRinging() {
         setTimeout(() => {
             if (!this.state.showVoiceCall && !this.state.showVideoCall) return;
@@ -445,7 +430,7 @@ export class WhatsAppDashboard extends Component {
     toggleCamera()  { this.state.cameraOff = !this.state.cameraOff; }
 
 
-    // ─── SIDEBAR METHODS (new) ────────────────────────────────────────────────
+    // ─── SIDEBAR METHODS ─────────────────────────────────────────────────────
 
     toggleSidebar() {
         this.state.sidebarCollapsed = !this.state.sidebarCollapsed;
