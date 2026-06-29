@@ -1,0 +1,403 @@
+/* ── Phone Numbers main body (tabs) ── */
+.wa-phone-numbers-body {
+    padding: 24px 32px;
+    background: #f7f9fc;
+    overflow-y: auto;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+.wa-phone-tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 24px;
+    border-bottom: 2px solid #e9edef;
+}
+.wa-phone-tab {
+    padding: 10px 20px;
+    background: transparent;
+    border: none;
+    border-bottom: 3px solid transparent;
+    font-size: 15px;
+    font-weight: 600;
+    color: #667781;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.wa-phone-tab:hover {
+    color: #111b21;
+}
+.wa-phone-tab--active {
+    color: #25D366;
+    border-bottom-color: #25D366;
+}
+
+/* ── My Numbers ── */
+.wa-numbers-body {
+    padding: 0;
+    background: transparent;
+    flex: 1;
+}
+.wa-numbers-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.wa-numbers-header h2 {
+    font-size: 22px;
+    font-weight: 600;
+    color: #111b21;
+}
+.wa-btn-primary {
+    background: #25D366;
+    color: #fff;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+.wa-btn-primary:hover {
+    background: #1aad54;
+}
+.wa-numbers-list {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+.wa-number-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 20px;
+    border-bottom: 1px solid #e9edef;
+}
+.wa-number-item:last-child {
+    border-bottom: none;
+}
+.wa-number-info {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+.wa-number {
+    font-weight: 500;
+}
+.wa-number-status {
+    font-size: 12px;
+    padding: 2px 12px;
+    border-radius: 12px;
+    background: #e9edef;
+    color: #667781;
+}
+.wa-number-status-active {
+    background: #d9fdd3;
+    color: #128C7E;
+}
+.wa-number-status-pending {
+    background: #fff3cd;
+    color: #856404;
+}
+.wa-btn-sm {
+    padding: 4px 14px;
+    border: 1px solid #e9edef;
+    border-radius: 4px;
+    background: transparent;
+    font-size: 12px;
+    cursor: pointer;
+}
+.wa-btn-sm:hover {
+    background: #f0f2f5;
+}
+.wa-btn-danger {
+    color: #f15c6d;
+    border-color: #f15c6d;
+}
+.wa-btn-danger:hover {
+    background: #fff0f0;
+}
+.wa-numbers-empty {
+    padding: 40px;
+    text-align: center;
+    color: #667781;
+}
+.wa-numbers-empty a {
+    color: #25D366;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+/* ── Buy Number – New Design ── */
+.wa-buy-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+.wa-buy-header h2 {
+    font-size: 22px;
+    font-weight: 600;
+    color: #111b21;
+    margin: 0;
+}
+
+/* Filters */
+.wa-buy-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    align-items: flex-end;
+}
+.wa-filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.wa-filter-group label {
+    font-size: 13px;
+    font-weight: 500;
+    color: #111b21;
+}
+.wa-filter-group select {
+    padding: 8px 12px;
+    border: 1px solid #e9edef;
+    border-radius: 6px;
+    font-size: 14px;
+    min-width: 180px;
+}
+.wa-filter-capabilities .wa-checkbox-group {
+    display: flex;
+    gap: 16px;
+    font-size: 13px;
+    align-items: center;
+}
+.wa-filter-capabilities .wa-checkbox-group label {
+    font-weight: 400;
+    color: #111b21;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+.wa-filter-capabilities .wa-checkbox-group input[type="checkbox"] {
+    width: 14px;
+    height: 14px;
+    accent-color: #25D366;
+}
+.wa-buy-filters .wa-btn-primary {
+    margin-left: auto;
+    min-width: 140px;
+}
+
+/* Number Grid (cards) */
+.wa-number-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+    margin-bottom: 4px;
+}
+.wa-number-card {
+    background: #fff;
+    border-radius: 8px;
+    padding: 16px 18px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: box-shadow 0.2s;
+}
+.wa-number-card:hover {
+    box-shadow: 0 2px 12px rgba(0,0,0,0.12);
+}
+.wa-number-card-main {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.wa-number-card-number {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    color: #111b21;
+}
+.wa-number-card-icon {
+    font-size: 18px;
+}
+.wa-number-card-type {
+    font-size: 13px;
+    color: #667781;
+    background: #f0f2f5;
+    padding: 2px 12px;
+    border-radius: 12px;
+}
+.wa-number-card-costs {
+    display: flex;
+    gap: 20px;
+    font-size: 13px;
+}
+.wa-number-card-cost {
+    display: flex;
+    flex-direction: column;
+}
+.wa-cost-label {
+    color: #667781;
+    font-size: 11px;
+}
+.wa-cost-value {
+    font-weight: 600;
+    color: #111b21;
+}
+.wa-number-card-action {
+    margin-top: 4px;
+}
+.wa-btn-buy {
+    background: #25D366;
+    color: #fff;
+    border: none;
+    padding: 6px 18px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+    width: 100%;
+}
+.wa-btn-buy:hover {
+    background: #1aad54;
+}
+.wa-no-numbers {
+    grid-column: 1 / -1;
+    text-align: center;
+    color: #667781;
+    padding: 30px 0;
+}
+
+/* Why Buy from Twilio */
+.wa-buy-why {
+    background: #fff;
+    padding: 16px 20px;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+.wa-buy-why h4 {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #111b21;
+}
+.wa-buy-why ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px 20px;
+}
+.wa-buy-why ul li {
+    font-size: 13px;
+    color: #111b21;
+    padding: 3px 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.wa-check {
+    color: #25D366;
+    font-weight: 700;
+}
+
+/* Estimate Cost */
+.wa-buy-estimate {
+    background: #fff;
+    padding: 16px 20px;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+.wa-buy-estimate h4 {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #111b21;
+}
+.wa-estimate-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 0;
+    font-size: 14px;
+    color: #111b21;
+}
+.wa-estimate-total {
+    font-weight: 700;
+    border-top: 1px solid #e9edef;
+    padding-top: 8px;
+    margin-top: 4px;
+}
+.wa-estimate-note {
+    font-size: 12px;
+    color: #667781;
+    margin-top: 6px;
+}
+
+/* Pagination */
+.wa-buy-pagination {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    color: #667781;
+    padding-top: 4px;
+}
+.wa-pagination-numbers {
+    display: flex;
+    gap: 6px;
+}
+.wa-page {
+    padding: 2px 8px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 13px;
+    color: #667781;
+    transition: all 0.15s;
+}
+.wa-page:hover {
+    background: #f0f2f5;
+}
+.wa-page-active {
+    background: #25D366;
+    color: #fff;
+}
+.wa-page-active:hover {
+    background: #1aad54;
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+    .wa-phone-numbers-body {
+        padding: 16px;
+    }
+    .wa-number-grid {
+        grid-template-columns: 1fr;
+    }
+    .wa-buy-filters {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .wa-buy-filters .wa-btn-primary {
+        margin-left: 0;
+    }
+    .wa-buy-why ul {
+        grid-template-columns: 1fr;
+    }
+    .wa-buy-pagination {
+        flex-direction: column;
+        gap: 8px;
+        align-items: flex-start;
+    }
+}

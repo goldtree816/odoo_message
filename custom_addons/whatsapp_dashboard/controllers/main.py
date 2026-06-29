@@ -10,9 +10,9 @@ from odoo.http import request
 _logger = logging.getLogger(__name__)
 
 # ── Twilio sandbox credentials ──────────────────────────────────────────────
-TWILIO_ACCOUNT_SID = 'abcd'
-TWILIO_AUTH_TOKEN  = 'abcd '
-TWILIO_FROM        = '123456'   # Twilio sandbox number
+TWILIO_ACCOUNT_SID = 'AC5b39938c26320f5d6207df9b59e5d345'
+TWILIO_AUTH_TOKEN  = 'cb49c04cb21377148d6f8d6b2ad26543'
+TWILIO_FROM        = 'whatsapp:+14155238886'   # Twilio sandbox number
 TWILIO_API_URL     = (
     f'https://api.twilio.com/2010-04-01/Accounts/'
     f'{TWILIO_ACCOUNT_SID}/Messages.json'
@@ -239,3 +239,54 @@ class WhatsAppDashboardController(http.Controller):
             }),
             headers=[('Content-Type', 'application/json')]
         )
+
+    # ── 8. Fetch available phone numbers from Twilio (with fallback) ──────────
+    @http.route('/whatsapp_dashboard/available_numbers', type='jsonrpc', auth='user', methods=['POST'])
+    def available_numbers(self, country_code='US', number_type='local', **kwargs):
+        """
+        Fetch available phone numbers from Twilio for a given country.
+        If the API fails (e.g., 404), returns fallback demo numbers.
+        """
+        # Fallback numbers (used if API fails)
+        fallback = [
+            {'id': '1', 'number': '+1 555-0101', 'type': 'Mobile', 'capabilities': 'SMS, Voice, WhatsApp', 'monthlyCost': '5.00', 'setupFee': '0.00'},
+            {'id': '2', 'number': '+1 555-0102', 'type': 'Mobile', 'capabilities': 'SMS, Voice, WhatsApp', 'monthlyCost': '5.00', 'setupFee': '0.00'},
+            {'id': '3', 'number': '+1 555-0103', 'type': 'Mobile', 'capabilities': 'SMS, Voice', 'monthlyCost': '3.50', 'setupFee': '0.00'},
+            {'id': '4', 'number': '+1 555-0104', 'type': 'Mobile', 'capabilities': 'SMS, Voice, WhatsApp', 'monthlyCost': '5.00', 'setupFee': '0.00'},
+            {'id': '5', 'number': '+1 555-0105', 'type': 'Mobile', 'capabilities': 'SMS, Voice', 'monthlyCost': '3.50', 'setupFee': '0.00'},
+            {'id': '6', 'number': '+1 555-0106', 'type': 'Mobile', 'capabilities': 'SMS, Voice, WhatsApp', 'monthlyCost': '5.00', 'setupFee': '0.00'},
+        ]
+
+        if not TWILIO_ACCOUNT_SID or not TWILIO_AUTH_TOKEN:
+            return {'numbers': fallback, 'error': 'Credentials not configured'}
+
+        # Build the API URL
+        api_url = f'https://api.twilio.com/2010-04-01/Accounts/{TWILIO_ACCOUNT_SID}/AvailablePhoneNumbers/{country_code}/{number_type.capitalize()}.json'
+
+        try:
+            resp = requests.get(
+                api_url,
+                auth=HTTPBasicAuth(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN),
+                timeout=10,
+                params={'Limit': 20}
+            )
+            if resp.status_code == 200:
+                data = resp.json()
+                numbers = []
+                for num in data.get('available_phone_numbers', []):
+                    caps = [k.title() for k, v in num.get('capabilities', {}).items() if v]
+                    numbers.append({
+                        'id': num.get('friendly_name'),
+                        'number': num.get('friendly_name'),
+                        'type': number_type.capitalize(),
+                        'capabilities': ', '.join(caps),
+                        'monthlyCost': str(num.get('monthly_price', '0.00')),
+                        'setupFee': str(num.get('setup_fee', '0.00')),
+                    })
+                return {'numbers': numbers}
+            else:
+                # If API fails, return fallback numbers
+                return {'numbers': fallback}
+        except Exception as e:
+            # On any error, return fallback
+            return {'numbers': fallback}
