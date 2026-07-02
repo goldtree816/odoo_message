@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<!-- ════════════════════════════════════════════════════════════
+     Phone Numbers – main view with tabs
+     ════════════════════════════════════════════════════════════ -->
+<t t-name="whatsapp_dashboard.PhoneNumbersView" owl="1">
+    <div class="wa-body wa-phone-numbers-body">
+        <!-- Tab Bar -->
+        <div class="wa-phone-tabs">
+            <button class="wa-phone-tab"
+                    t-att-class="{ 'wa-phone-tab--active': state.phoneTab === 'my_numbers' }"
+                    t-on-click="() => this.state.phoneTab = 'my_numbers'">
+                My Numbers
+            </button>
+            <button class="wa-phone-tab"
+                    t-att-class="{ 'wa-phone-tab--active': state.phoneTab === 'buy_number' }"
+                    t-on-click="() => this.state.phoneTab = 'buy_number'">
+                Buy Number
+            </button>
+        </div>
+
+        <!-- Content -->
+        <t t-if="state.phoneTab === 'my_numbers'">
+            <t t-call="whatsapp_dashboard.MyNumbersList"/>
+        </t>
+        <t t-if="state.phoneTab === 'buy_number'">
+            <t t-call="whatsapp_dashboard.BuyNumberView"/>
+        </t>
+    </div>
+</t>
+
+<!-- ════════════════════════════════════════════════════════════
+     My Numbers List
+     ════════════════════════════════════════════════════════════ -->
+<t t-name="whatsapp_dashboard.MyNumbersList" owl="1">
+    <div class="wa-numbers-container">
+        <div class="wa-numbers-header">
+            <h2>My Phone Numbers</h2>
+            <button class="wa-btn-primary" t-on-click="() => this.state.phoneTab = 'buy_number'">
+                Buy New Number
+            </button>
+        </div>
+        <div class="wa-numbers-list">
+            <t t-if="state.myNumbers.length === 0">
+                <div class="wa-numbers-empty">
+                    <p>No phone numbers yet. <a t-on-click="() => this.state.phoneTab = 'buy_number'">Buy a number</a></p>
+                </div>
+            </t>
+            <t t-foreach="state.myNumbers" t-as="num" t-key="num.number">
+                <div class="wa-number-item">
+                    <div class="wa-number-info">
+                        <span class="wa-number"><t t-esc="num.number"/></span>
+                        <span class="wa-number-status" t-att-class="num.status === 'Active' ? 'wa-number-status-active' : 'wa-number-status-pending'">
+                            <t t-esc="num.status"/>
+                        </span>
+                    </div>
+                    <div class="wa-number-actions">
+                        <button class="wa-btn-sm">Configure</button>
+                        <button class="wa-btn-sm wa-btn-danger">Delete</button>
+                    </div>
+                </div>
+            </t>
+        </div>
+    </div>
+</t>
+
+<!-- ════════════════════════════════════════════════════════════
+     Buy Number Interface – redesigned to match image
+     ════════════════════════════════════════════════════════════ -->
+<t t-name="whatsapp_dashboard.BuyNumberView" owl="1">
+    <div class="wa-buy-container">
+
+        <!-- Header: 1. Search Available Numbers -->
+        <div class="wa-buy-header">
+            <h2>1. Search Available Numbers</h2>
+        </div>
+
+        <!-- Filters Row -->
+        <div class="wa-buy-filters">
+            <div class="wa-filter-group">
+                <label>Country</label>
+                <select t-model="state.buyCountry">
+                    <option value="US">United States (+1)</option>
+                    <option value="CA">Canada (+1)</option>
+                </select>
+            </div>
+            <div class="wa-filter-group wa-filter-capabilities">
+                <label>Capabilities</label>
+                <div class="wa-checkbox-group">
+                    <label><input type="checkbox" checked="checked" disabled="disabled"/> SMS</label>
+                    <label><input type="checkbox" checked="checked" disabled="disabled"/> Voice</label>
+                    <label><input type="checkbox" checked="checked" disabled="disabled"/> WhatsApp</label>
+                </div>
+            </div>
+            <button class="wa-btn-primary" t-on-click="searchNumbers" t-att-disabled="state.isLoadingNumbers">
+                <t t-if="state.isLoadingNumbers">Searching...</t>
+                <t t-else="">Search Numbers</t>
+            </button>
+        </div>
+
+        <!-- Number Cards (grid) -->
+        <div class="wa-number-grid">
+            <t t-if="state.availableNumbers.length === 0">
+                <div class="wa-no-numbers">
+                    <span>No numbers available. Click "Search Numbers" to fetch from Twilio.</span>
+                </div>
+            </t>
+            <t t-foreach="state.availableNumbers" t-as="num" t-key="num.id">
+                <div class="wa-number-card">
+                    <div class="wa-number-card-main">
+                        <div class="wa-number-card-number">
+                            <span class="wa-number-card-icon">📞</span>
+                            <span class="wa-number-card-digits"><t t-esc="num.number"/></span>
+                        </div>
+                        <div class="wa-number-card-type">
+                            <t t-esc="num.type"/>
+                        </div>
+                    </div>
+                    <div class="wa-number-card-costs">
+                        <div class="wa-number-card-cost">
+                            <span class="wa-cost-label">Monthly Cost</span>
+                            <span class="wa-cost-value">$<t t-esc="num.monthlyCost"/></span>
+                        </div>
+                        <div class="wa-number-card-cost">
+                            <span class="wa-cost-label">Setup Fee</span>
+                            <span class="wa-cost-value">$<t t-esc="num.setupFee"/></span>
+                        </div>
+                    </div>
+                    <div class="wa-number-card-action">
+                        <button class="wa-btn-buy" t-on-click="() => this.buyNumber(num)">Buy Number</button>
+                    </div>
+                </div>
+            </t>
+        </div>
+
+        <!-- Why Buy from Twilio -->
+        <div class="wa-buy-why">
+            <h4>Why buy from Twilio?</h4>
+            <ul>
+                <li><span class="wa-check">✓</span> 100% WhatsApp API compliant</li>
+                <li><span class="wa-check">✓</span> High deliverability</li>
+                <li><span class="wa-check">✓</span> Global number coverage</li>
+                <li><span class="wa-check">✓</span> Scalable &amp; reliable</li>
+                <li><span class="wa-check">✓</span> 24/7 Support</li>
+            </ul>
+        </div>
+
+        <!-- Estimate Cost -->
+        <div class="wa-buy-estimate">
+            <h4>Estimate Cost</h4>
+            <div class="wa-estimate-row">
+                <span>Monthly Cost</span>
+                <span>$5.00</span>
+            </div>
+            <div class="wa-estimate-row">
+                <span>Setup Fee</span>
+                <span>$0.00</span>
+            </div>
+            <div class="wa-estimate-row wa-estimate-total">
+                <span>Total</span>
+                <span>$5.00 /month</span>
+            </div>
+            <p class="wa-estimate-note">* Prices may vary based on country and number type.</p>
+        </div>
+
+        <!-- Pagination -->
+        <div class="wa-buy-pagination">
+            <span>Showing 1 to 6 of 20 numbers</span>
+            <div class="wa-pagination-numbers">
+                <span class="wa-page wa-page-active">1</span>
+                <span class="wa-page">2</span>
+                <span class="wa-page">3</span>
+                <span class="wa-page">4</span>
+                <span class="wa-page">5</span>
+                <span class="wa-page">6</span>
+            </div>
+        </div>
+
+    </div>
+</t>
+
+</templates>
