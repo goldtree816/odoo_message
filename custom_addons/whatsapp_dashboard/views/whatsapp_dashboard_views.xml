@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data>
+
+        <!-- ───────────────────────────────────────────────────────────
+             ACTIONS (must be defined before menuitems that use them)
+             ─────────────────────────────────────────────────────────── -->
+
+        <!-- Client Action – WhatsApp Dashboard -->
+        <record id="action_whatsapp_dashboard" model="ir.actions.client">
+            <field name="name">WhatsApp Dashboard</field>
+            <field name="tag">whatsapp_dashboard</field>
+            <field name="target">current</field>
+        </record>
+
+        <!-- External Users Action (list + form) -->
+        <record id="action_whatsapp_external_users" model="ir.actions.act_window">
+            <field name="name">External Users</field>
+            <field name="res_model">whatsapp.thread</field>
+            <field name="view_mode">list,form</field>
+            <field name="domain">[('thread_type','=','external')]</field>
+            <field name="help">Manage external WhatsApp contacts</field>
+        </record>
+
+        <!-- Dashboard Action (graph + pivot) -->
+        <record id="action_whatsapp_dashboard_graph" model="ir.actions.act_window">
+            <field name="name">Dashboard</field>
+            <field name="res_model">whatsapp.thread</field>
+            <field name="view_mode">graph,pivot</field>
+            <field name="domain">[]</field>
+            <field name="help">Visualize WhatsApp activity and unread counts</field>
+        </record>
+
+        <!-- Sync Customers Action (must come before its menuitem) -->
+        <record id="action_whatsapp_sync_customers" model="ir.actions.act_window">
+            <field name="name">Sync Customers</field>
+            <field name="res_model">whatsapp.thread</field>
+            <field name="view_mode">list,form</field>
+            <field name="view_id" ref="view_whatsapp_thread_list"/>
+            <field name="context">{'default_thread_type': 'external'}</field>
+        </record>
+
+        <!-- ───────────────────────────────────────────────────────────
+             VIEWS
+             ─────────────────────────────────────────────────────────── -->
+
+        <!-- List view for External Users -->
+        <record id="view_whatsapp_thread_list" model="ir.ui.view">
+            <field name="name">whatsapp.thread.list</field>
+            <field name="model">whatsapp.thread</field>
+            <field name="arch" type="xml">
+                <list string="External Users" editable="bottom">
+                    <field name="name" string="Name"/>
+                    <field name="phone" string="Phone"/>
+                    <field name="partner_id" string="Customer"/>
+                    <field name="last_message" string="Last Message"/>
+                    <field name="last_message_date" string="Last Activity"/>
+                    <field name="unread_count" string="Unread" sum="Unread"/>
+                    <field name="status" string="Status"/>
+                    <field name="thread_type" string="Type"/>
+                    <field name="active" string="Active"/>
+                </list>
+            </field>
+        </record>
+
+        <!-- Form view for External Users -->
+        <record id="view_whatsapp_thread_form" model="ir.ui.view">
+            <field name="name">whatsapp.thread.form</field>
+            <field name="model">whatsapp.thread</field>
+            <field name="arch" type="xml">
+                <form string="External User">
+                    <header>
+                        <button name="action_sync_customers" string="Sync Customers" type="object" class="btn-primary"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" placeholder="Contact Name"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="phone" widget="phone" placeholder="+9779819059190"/>
+                                <field name="partner_id" options="{'no_create': True}" string="Customer"/>
+                                <field name="status"/>
+                                <field name="thread_type"/>
+                                <field name="active"/>
+                            </group>
+                            <group>
+                                <field name="last_message"/>
+                                <field name="last_message_date"/>
+                                <field name="unread_count"/>
+                            </group>
+                        </group>
+                        <group string="Messages">
+                            <field name="message_ids" context="{'default_direction': 'incoming'}">
+                                <list string="Messages" editable="bottom">
+                                    <field name="body"/>
+                                    <field name="direction"/>
+                                    <field name="message_type"/>
+                                    <field name="status"/>
+                                    <field name="timestamp"/>
+                                </list>
+                                <form>
+                                    <group>
+                                        <field name="body"/>
+                                        <field name="direction"/>
+                                        <field name="message_type"/>
+                                        <field name="status"/>
+                                        <field name="timestamp"/>
+                                    </group>
+                                </form>
+                            </field>
+                        </group>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="%(action_whatsapp_dashboard)d"
+                                    type="action"
+                                    class="oe_stat_button"
+                                    icon="fa-whatsapp"
+                                    string="Open Chat"/>
+                        </div>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Graph view -->
+        <record id="view_whatsapp_thread_graph" model="ir.ui.view">
+            <field name="name">whatsapp.thread.graph</field>
+            <field name="model">whatsapp.thread</field>
+            <field name="arch" type="xml">
+                <graph string="WhatsApp Activity" type="bar">
+                    <field name="last_message_date" interval="day"/>
+                    <field name="unread_count" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+        <!-- Pivot view -->
+        <record id="view_whatsapp_thread_pivot" model="ir.ui.view">
+            <field name="name">whatsapp.thread.pivot</field>
+            <field name="model">whatsapp.thread</field>
+            <field name="arch" type="xml">
+                <pivot string="Messages Overview">
+                    <field name="thread_type" type="row"/>
+                    <field name="status" type="col"/>
+                    <field name="unread_count" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+        <!-- ───────────────────────────────────────────────────────────
+             MENUS (must come after actions)
+             ─────────────────────────────────────────────────────────── -->
+
+        <menuitem
+            id="menu_whatsapp_root"
+            name="WhatsApp"
+            sequence="200"
+        />
+
+        <menuitem
+            id="menu_whatsapp_dashboard"
+            name="WhatsApp Dashboard"
+            parent="menu_whatsapp_root"
+            action="action_whatsapp_dashboard"
+            sequence="1"
+        />
+
+        <menuitem
+            id="menu_whatsapp_dashboard_graph"
+            name="Dashboard"
+            parent="menu_whatsapp_root"
+            action="action_whatsapp_dashboard_graph"
+            sequence="2"
+        />
+
+        <menuitem
+            id="menu_whatsapp_external_users"
+            name="External Users"
+            parent="menu_whatsapp_root"
+            action="action_whatsapp_external_users"
+            sequence="5"
+        />
+
+        <menuitem
+            id="menu_whatsapp_sync_customers"
+            name="Sync Customers"
+            parent="menu_whatsapp_root"
+            action="action_whatsapp_sync_customers"
+            sequence="10"
+        />
+
+    </data>
+</odoo>

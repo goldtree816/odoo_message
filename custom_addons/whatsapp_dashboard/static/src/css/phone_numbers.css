@@ -1,0 +1,355 @@
+/* phone_numbers.css — Buy Number section styles */
+
+/* Main body */
+.wa-phone-numbers-body {
+    padding: 24px 32px;
+    background: #f7f9fc;
+    overflow-y: auto;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Tabs */
+.wa-phone-tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 24px;
+    border-bottom: 2px solid #e9edef;
+}
+
+.wa-phone-tab {
+    padding: 10px 20px;
+    background: transparent;
+    border: none;
+    border-bottom: 3px solid transparent;
+    font-size: 15px;
+    font-weight: 600;
+    color: #667781;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+.wa-phone-tab:hover {
+    color: #111b21;
+}
+.wa-phone-tab--active {
+    color: #25D366;
+    border-bottom-color: #25D366;
+}
+
+/* My Numbers */
+.wa-numbers-container {
+    padding: 0;
+    background: transparent;
+    flex: 1;
+}
+
+.wa-numbers-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+.wa-numbers-header h2 {
+    font-size: 22px;
+    font-weight: 600;
+    color: #111b21;
+}
+
+.wa-btn-primary {
+    background: #25D366;
+    color: #fff;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+}
+.wa-btn-primary:hover {
+    background: #1aad54;
+}
+
+.wa-numbers-list {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+
+.wa-number-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 20px;
+    border-bottom: 1px solid #e9edef;
+}
+.wa-number-item:last-child {
+    border-bottom: none;
+}
+
+.wa-number-info {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+}
+
+.wa-number {
+    font-weight: 500;
+}
+
+.wa-number-status {
+    font-size: 12px;
+    padding: 2px 12px;
+    border-radius: 12px;
+    background: #e9edef;
+    color: #667781;
+}
+.wa-number-status--active {
+    background: #d9fdd3;
+    color: #128C7E;
+}
+.wa-number-status--pending {
+    background: #fff3cd;
+    color: #856404;
+}
+
+.wa-btn-sm {
+    padding: 4px 14px;
+    border: 1px solid #e9edef;
+    border-radius: 4px;
+    background: transparent;
+    font-size: 12px;
+    cursor: pointer;
+}
+.wa-btn-sm:hover {
+    background: #f0f2f5;
+}
+.wa-btn-danger {
+    color: #f15c6d;
+    border-color: #f15c6d;
+}
+.wa-btn-danger:hover {
+    background: #fff0f0;
+}
+
+.wa-numbers-empty {
+    padding: 40px;
+    text-align: center;
+    color: #667781;
+}
+.wa-numbers-empty a {
+    color: #25D366;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+/* Buy Number */
+.wa-buy-container {
+    flex: 1;
+}
+
+.wa-buy-header h2 {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: #111b21;
+}
+.wa-buy-header p {
+    color: #667781;
+    margin-bottom: 20px;
+}
+
+.wa-buy-steps {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+}
+
+.wa-step {
+    padding: 6px 14px;
+    background: #e9edef;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    color: #667781;
+}
+.wa-step--active {
+    background: #25D366;
+    color: #fff;
+}
+
+.wa-buy-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    margin-bottom: 20px;
+    align-items: flex-end;
+}
+
+.wa-filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+.wa-filter-group label {
+    font-size: 13px;
+    font-weight: 500;
+    color: #111b21;
+}
+.wa-filter-group select {
+    padding: 8px 12px;
+    border: 1px solid #e9edef;
+    border-radius: 6px;
+    font-size: 14px;
+    min-width: 160px;
+}
+
+.wa-number-table {
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.wa-table-header,
+.wa-table-row {
+    display: grid;
+    grid-template-columns: 1.5fr 0.8fr 1.2fr 0.8fr 0.8fr 0.8fr;
+    padding: 12px 16px;
+    border-bottom: 1px solid #e9edef;
+    font-size: 13px;
+    align-items: center;
+}
+.wa-table-header {
+    background: #f0f2f5;
+    font-weight: 600;
+    color: #667781;
+}
+.wa-table-row:hover {
+    background: #f5f6f7;
+}
+
+.wa-number-display {
+    font-weight: 500;
+    color: #111b21;
+}
+
+.wa-btn-buy {
+    background: #25D366;
+    color: #fff;
+    border: none;
+    padding: 6px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+}
+.wa-btn-buy:hover {
+    background: #1aad54;
+}
+
+.wa-buy-why {
+    background: #fff;
+    padding: 16px 20px;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+    margin-bottom: 20px;
+}
+.wa-buy-why h4 {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+.wa-buy-why ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px 20px;
+}
+.wa-buy-why ul li {
+    font-size: 13px;
+    color: #111b21;
+    padding: 2px 0;
+}
+
+.wa-buy-estimate {
+    background: #fff;
+    padding: 16px 20px;
+    border-radius: 8px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+}
+.wa-buy-estimate h4 {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.wa-estimate-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 0;
+    font-size: 14px;
+    color: #111b21;
+}
+.wa-estimate-total {
+    font-weight: 700;
+    border-top: 1px solid #e9edef;
+    padding-top: 8px;
+    margin-top: 4px;
+}
+.wa-estimate-note {
+    font-size: 12px;
+    color: #667781;
+    margin-top: 6px;
+}
+
+/* Pagination */
+.wa-buy-pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    padding: 12px 0;
+    margin-bottom: 20px;
+}
+
+.wa-page-btn {
+    min-width: 32px;
+    height: 32px;
+    padding: 0 8px;
+    border: 1px solid #e9edef;
+    border-radius: 6px;
+    background: #fff;
+    color: #111b21;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+}
+.wa-page-btn:hover:not(:disabled) {
+    background: #f0f2f5;
+    border-color: #d1d7db;
+}
+.wa-page-btn--active {
+    background: #6C5CE7;
+    color: #fff;
+    border-color: #6C5CE7;
+}
+.wa-page-btn--active:hover {
+    background: #5b4dd4;
+}
+.wa-page-btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+}

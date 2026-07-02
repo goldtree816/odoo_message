@@ -1,0 +1,1141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="whatsapp_dashboard.WhatsAppDashboard" owl="1">
+        <div class="wa-root">
+            <!-- SIDEBAR NAV -->
+            <div class="wa-odoo-sidebar" t-att-class="{'wa-odoo-sidebar--collapsed': state.sidebarCollapsed}">
+                <div class="wa-odoo-sidebar-inner">
+                    <div class="wa-odoo-header">
+                        <button class="wa-odoo-logo-btn" title="New">
+                            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                                <line x1="7" y1="1" x2="7" y2="13" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                                <line x1="1" y1="7" x2="13" y2="7" stroke="white" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
+                        </button>
+                        <span class="wa-odoo-brand">WhatsApp</span>
+                        <button class="wa-odoo-toggle" t-on-click="toggleSidebar" title="Toggle sidebar">
+                            <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+                                <path d="M6.5 1.5L3 5L6.5 8.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </button>
+                    </div>
+                    <nav class="wa-odoo-nav">
+                        <button class="wa-odoo-nav-item" t-att-class="{'wa-odoo-nav-item--active': state.activeNavItem === 'dashboard'}" t-on-click="() => this.setNavItem('dashboard')" data-label="Dashboard">
+                            <span class="wa-odoo-nav-icon">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                    <rect x="3" y="3" width="7" height="7" rx="1"/>
+                                    <rect x="14" y="3" width="7" height="7" rx="1"/>
+                                    <rect x="3" y="14" width="7" height="7" rx="1"/>
+                                </svg>
+                            </span>
+                            <span class="wa-odoo-nav-label">Dashboard</span>
+                        </button>
+                        <button class="wa-odoo-nav-item" t-att-class="{'wa-odoo-nav-item--active': state.activeNavItem === 'phone_numbers'}" t-on-click="() => this.setNavItem('phone_numbers')" data-label="Phone Numbers">
+                            <span class="wa-odoo-nav-icon">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                    <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                                </svg>
+                            </span>
+                            <span class="wa-odoo-nav-label">Phone Numbers</span>
+                        </button>
+                        <button class="wa-odoo-nav-item" t-att-class="{'wa-odoo-nav-item--active': state.activeNavItem === 'subaccounts'}" t-on-click="() => this.setNavItem('subaccounts')" data-label="Subaccounts">
+                            <span class="wa-odoo-nav-icon">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                    <circle cx="9" cy="7" r="4"/>
+                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                                </svg>
+                            </span>
+                            <span class="wa-odoo-nav-label">Subaccounts</span>
+                        </button>
+                        <button class="wa-odoo-nav-item" t-att-class="{'wa-odoo-nav-item--active': state.activeNavItem === 'settings'}" t-on-click="() => this.setNavItem('settings')" data-label="Settings">
+                            <span class="wa-odoo-nav-icon">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                    <circle cx="12" cy="12" r="3"/>
+                                    <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 9a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                                </svg>
+                            </span>
+                            <span class="wa-odoo-nav-label">Settings</span>
+                        </button>
+                    </nav>
+                </div>
+            </div>
+
+            <!-- Main Content Area -->
+            <div class="wa-odoo-main">
+                <!-- Module Header -->
+                <div class="wa-module-header">
+                    <div class="wa-module-header-left">
+                        <div class="wa-header-logo">
+                            <svg width="24" height="24" viewBox="0 0 32 32">
+                                <circle cx="16" cy="16" r="16" fill="#25D366"/>
+                                <path fill="#fff" d="M16 5.3C10.1 5.3 5.3 10.1 5.3 16c0 1.9.5 3.7 1.4 5.2L5.3 26.7l1.4-1.4c1.5.8 3.2 1.3 5 1.3 5.9 0 10.7-4.8 10.7-10.7S21.9 5.3 16 5.3z"/>
+                            </svg>
+                        </div>
+                        <span class="wa-module-title">WhatsApp Dashboard</span>
+                    </div>
+                    <div class="wa-module-header-right">
+                        <span class="wa-connected-dot"></span>
+                        <span class="wa-connected-label">Connected</span>
+                        <button class="wa-config-btn">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="3"/>
+                                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 9a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/>
+                            </svg>
+                            Configure
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Views -->
+                <t t-if="state.currentView == 'dashboard'">
+                    <t t-call="whatsapp_dashboard.DashboardView"/>
+                </t>
+                <t t-if="state.currentView == 'phone_numbers'">
+                    <t t-call="whatsapp_dashboard.PhoneNumbersView"/>
+                </t>
+                <t t-if="state.currentView == 'subaccounts'">
+                    <t t-call="whatsapp_dashboard.SubaccountsView"/>
+                </t>
+                <t t-if="state.currentView == 'settings'">
+                    <div class="wa-body">
+                        <div class="wa-empty">
+                            <h2>Opening Settings...</h2>
+                            <p>If the settings page doesn't open, click <a href="/odoo/settings" target="_blank">here</a></p>
+                        </div>
+                    </div>
+                </t>
+            </div>
+        </div>
+
+        <!-- STRIPE PAYMENT MODAL -->
+        <t t-if="state.showPaymentModal">
+            <t t-call="whatsapp_dashboard.StripePaymentModal"/>
+        </t>
+    </t>
+
+    <!-- ==================== DASHBOARD VIEW ==================== -->
+    <t t-name="whatsapp_dashboard.DashboardView" owl="1">
+        <div class="wa-body">
+            <!-- SIDEBAR -->
+            <div class="wa-sidebar">
+                <div class="wa-search-row">
+                    <div class="wa-search-wrap">
+                        <svg class="wa-search-ico" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"/>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                        </svg>
+                        <input class="wa-search-input" type="text" placeholder="Search or start new chat" t-model="state.searchQuery"/>
+                    </div>
+                    <button class="wa-icon-btn" title="Add User" t-on-click="openAddUserModal">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                            <circle cx="12" cy="7" r="4"/>
+                            <line x1="19" y1="2" x2="19" y2="6"/>
+                            <line x1="17" y1="4" x2="21" y2="4"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Add User Modal -->
+                <t t-if="state.showAddUserModal">
+                    <div class="wa-modal-overlay" t-on-click.self="closeAddUserModal">
+                        <div class="wa-modal">
+                            <div class="wa-modal-header">
+                                <span>Add External User</span>
+                                <button class="wa-modal-close" t-on-click="closeAddUserModal">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <line x1="18" y1="6" x2="6" y2="18"/>
+                                        <line x1="6" y1="6" x2="18" y2="18"/>
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="wa-modal-body">
+                                <div class="wa-modal-field">
+                                    <label>Contact Name (optional)</label>
+                                    <input type="text" t-model="state.addUserName" placeholder="e.g. John Doe"/>
+                                </div>
+                                <div class="wa-modal-field">
+                                    <label>Phone Number *</label>
+                                    <input type="text" t-model="state.addUserPhone" placeholder="e.g. +9779819059190"/>
+                                </div>
+                            </div>
+                            <div class="wa-modal-footer">
+                                <button class="wa-modal-btn wa-modal-btn--secondary" t-on-click="closeAddUserModal">Cancel</button>
+                                <button class="wa-modal-btn wa-modal-btn--primary" t-on-click="addExternalUser" t-att-disabled="!state.addUserPhone">Add User</button>
+                            </div>
+                        </div>
+                    </div>
+                </t>
+
+                <div class="wa-filter-row">
+                    <t t-foreach="['All','External','Internal Notes']" t-as="tab" t-key="tab">
+                        <button class="wa-filter-pill" t-att-class="{'wa-filter-pill--active': state.activeFilter === tab}" t-on-click="() => this.setFilter(tab)">
+                            <t t-esc="tab"/>
+                        </button>
+                    </t>
+                </div>
+
+                <div class="wa-thread-list">
+                    <t t-if="filteredThreads.length === 0">
+                        <div class="wa-no-threads">No conversations found</div>
+                    </t>
+                    <t t-foreach="filteredThreads" t-as="thread" t-key="thread.id">
+                        <div class="wa-thread-item" t-att-class="{'wa-thread-item--active': state.activeThread and state.activeThread.id === thread.id}" t-on-click="() => this.selectThread(thread)">
+                            <div class="wa-avatar" t-att-style="'background:' + thread.color">
+                                <t t-esc="thread.initials"/>
+                                <span class="wa-avatar-dot" t-att-class="thread.status === 'online' ? 'wa-avatar-dot--on' : ''"/>
+                            </div>
+                            <div class="wa-thread-info">
+                                <div class="wa-thread-row1">
+                                    <span class="wa-thread-name"><t t-esc="thread.name"/></span>
+                                    <span class="wa-thread-time" t-att-class="thread.unread > 0 ? 'wa-thread-time--green' : ''"><t t-esc="thread.time"/></span>
+                                </div>
+                                <div class="wa-thread-row2">
+                                    <span class="wa-thread-preview"><t t-esc="thread.last_message"/></span>
+                                    <t t-if="thread.unread > 0">
+                                        <span class="wa-badge"><t t-esc="thread.unread"/></span>
+                                    </t>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </div>
+            </div>
+
+            <!-- CHAT AREA -->
+            <div class="wa-chat">
+                <t t-if="!state.activeThread">
+                    <div class="wa-empty">
+                        <div class="wa-empty-ring">
+                            <svg width="56" height="56" viewBox="0 0 32 32">
+                                <circle cx="16" cy="16" r="16" fill="#25D366"/>
+                                <path fill="#fff" d="M16 5.3C10.1 5.3 5.3 10.1 5.3 16c0 1.9.5 3.7 1.4 5.2L5.3 26.7l1.4-1.4c1.5.8 3.2 1.3 5 1.3 5.9 0 10.7-4.8 10.7-10.7S21.9 5.3 16 5.3z"/>
+                            </svg>
+                        </div>
+                        <h2 class="wa-empty-title">WhatsApp Dashboard</h2>
+                        <p class="wa-empty-sub">Select a conversation to start messaging.</p>
+                    </div>
+                </t>
+
+                <t t-if="state.activeThread">
+                    <!-- Chat Header -->
+                    <div class="wa-chat-header">
+                        <div class="wa-chat-header-left" t-on-click="openInfoPanel">
+                            <div class="wa-avatar" t-att-style="'background:' + state.activeThread.color">
+                                <t t-esc="state.activeThread.initials"/>
+                                <span class="wa-avatar-dot" t-att-class="state.activeThread.status == 'online' ? 'wa-avatar-dot--on' : ''"/>
+                            </div>
+                            <div class="wa-chat-contact-info">
+                                <span class="wa-contact-name"><t t-esc="state.activeThread.name"/></span>
+                                <span class="wa-contact-status" t-att-class="state.activeThread.status == 'online' ? 'wa-contact-status--online' : ''">
+                                    <t t-if="state.activeThread.status == 'online'">Online</t>
+                                    <t t-else="">Last seen recently</t>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="wa-chat-header-right">
+                            <button class="wa-icon-btn wa-icon-btn--lg" title="Search">
+                                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                                    <circle cx="11" cy="11" r="8"/>
+                                    <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                                </svg>
+                            </button>
+                            <button class="wa-icon-btn wa-icon-btn--lg" title="More">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                                    <circle cx="12" cy="5" r="2"/>
+                                    <circle cx="12" cy="12" r="2"/>
+                                    <circle cx="12" cy="19" r="2"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Messages -->
+                    <div class="wa-messages" t-ref="messages">
+                        <div class="wa-date-chip"><span>Today</span></div>
+                        <t t-foreach="state.messages" t-as="msg" t-key="msg.id">
+                            <div class="wa-msg-row" t-att-class="msg.direction === 'outgoing' ? 'wa-msg-row--out' : 'wa-msg-row--in'">
+                                <div class="wa-bubble" t-att-class="{'wa-bubble--out': msg.direction === 'outgoing', 'wa-bubble--in': msg.direction === 'incoming', 'wa-bubble--internal': msg.type === 'internal'}">
+                                    <!-- Image preview in bubble -->
+                                    <t t-if="msg.attachment and msg.attachment.isImage">
+                                        <img t-att-src="msg.attachment.objectUrl or msg.attachment.url" style="max-width:220px;max-height:180px;border-radius:6px;display:block;margin-bottom:4px;" alt="Image"/>
+                                    </t>
+                                    <!-- Non-image attachment in bubble -->
+                                    <t t-if="msg.attachment and !msg.attachment.isImage">
+                                        <div class="wa-bubble-file">
+                                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#667781" stroke-width="2">
+                                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                                <polyline points="14 2 14 8 20 8"/>
+                                            </svg>
+                                            <div class="wa-bubble-file-info">
+                                                <span class="wa-bubble-file-name"><t t-esc="msg.attachment.name"/></span>
+                                                <span class="wa-bubble-file-size"><t t-esc="msg.attachment.size"/></span>
+                                            </div>
+                                            <a t-att-href="msg.attachment.url" target="_blank" class="wa-bubble-download" title="Download">
+                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                                                    <polyline points="7 10 12 15 17 10"/>
+                                                    <line x1="12" y1="15" x2="12" y2="3"/>
+                                                </svg>
+                                            </a>
+                                        </div>
+                                    </t>
+                                    <t t-if="msg.body">
+                                        <span class="wa-bubble-text"><t t-esc="msg.body"/></span>
+                                    </t>
+                                    <span class="wa-bubble-footer">
+                                        <span class="wa-bubble-time"><t t-esc="msg.time"/></span>
+                                        <t t-if="msg.direction === 'outgoing'">
+                                            <span class="wa-ticks" t-att-class="msg.status === 'read' ? 'wa-ticks--blue' : ''">
+                                                <svg width="15" height="11" viewBox="0 0 15 11" fill="none">
+                                                    <path d="M1 5.5L4.5 9L9 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                                    <path d="M7 5.5L10.5 9L14 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                                                </svg>
+                                            </span>
+                                        </t>
+                                    </span>
+                                </div>
+                            </div>
+                        </t>
+                        <t t-if="state.isTyping">
+                            <div class="wa-msg-row wa-msg-row--in">
+                                <div class="wa-bubble wa-bubble--in wa-typing">
+                                    <span class="wa-dot"/><span class="wa-dot"/><span class="wa-dot"/>
+                                </div>
+                            </div>
+                        </t>
+                    </div>
+
+                    <!-- Attachment menu -->
+                    <t t-if="state.showAttachMenu">
+                        <div class="wa-attachment-menu">
+                            <div class="wa-attachment-item" t-on-click="() => this.handleAttachment('document')">
+                                <span class="wa-attachment-icon">📄</span>
+                                <span class="wa-attachment-label">Document</span>
+                            </div>
+                            <div class="wa-attachment-item" t-on-click="() => this.handleAttachment('photos')">
+                                <span class="wa-attachment-icon">🖼️</span>
+                                <span class="wa-attachment-label">Photos &amp; Videos</span>
+                            </div>
+                        </div>
+                    </t>
+
+                    <!-- FILE PREVIEW MODAL -->
+                    <t t-if="state.showFilePreview and state.pendingFile">
+                        <div class="wa-file-preview-overlay">
+                            <!-- Top bar -->
+                            <div class="wa-file-preview-topbar">
+                                <button class="wa-file-preview-close" t-on-click="closeFilePreview">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                                        <line x1="18" y1="6" x2="6" y2="18"/>
+                                        <line x1="6" y1="6" x2="18" y2="18"/>
+                                    </svg>
+                                </button>
+                                <span class="wa-file-preview-title"><t t-esc="state.pendingFile.name"/></span>
+                            </div>
+
+                            <!-- Preview area -->
+                            <div class="wa-file-preview-area">
+                                <t t-if="state.pendingFile.isImage">
+                                    <img t-att-src="state.pendingFile.objectUrl" class="wa-file-preview-image" alt="Preview"/>
+                                </t>
+                                <t t-if="!state.pendingFile.isImage">
+                                    <div class="wa-file-preview-icon-wrap">
+                                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.5)" stroke-width="1.2">
+                                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                            <polyline points="14 2 14 8 20 8"/>
+                                        </svg>
+                                        <p class="wa-file-preview-no-preview">No preview available</p>
+                                        <p class="wa-file-preview-meta"><t t-esc="state.pendingFile.sizeFormatted"/> · <t t-esc="state.pendingFile.fileType.toUpperCase()"/></p>
+                                    </div>
+                                </t>
+                                <t t-if="state.pendingFile.uploading">
+                                    <div class="wa-file-preview-uploading">Uploading...</div>
+                                </t>
+                            </div>
+
+                            <!-- Bottom bar -->
+                            <div class="wa-file-preview-bottom">
+                                <input class="wa-file-preview-input" type="text" placeholder="Add a caption..." t-model="state.draftMessage" t-on-keydown="onKeyDown"/>
+                                <button class="wa-file-preview-send"
+                                    t-att-class="{'wa-file-preview-send--ready': state.pendingFile and state.pendingFile.attachmentId}"
+                                    t-on-click="sendMessage"
+                                    t-att-disabled="state.pendingFile and state.pendingFile.uploading">
+                                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2">
+                                        <line x1="22" y1="2" x2="11" y2="13"/>
+                                        <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    </t>
+
+                    <!-- Input bar -->
+                    <div class="wa-input-bar">
+                        <button class="wa-icon-btn wa-icon-btn--lg" title="Attach file" t-on-click="toggleAttachMenu">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#8696a0" stroke-width="2">
+                                <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/>
+                            </svg>
+                        </button>
+                        <button class="wa-icon-btn wa-icon-btn--lg" title="Emoji">
+                            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#8696a0" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <path d="M8 14s1.5 2 4 2 4-2 4-2"/>
+                                <line x1="9" y1="9" x2="9.01" y2="9"/>
+                                <line x1="15" y1="9" x2="15.01" y2="9"/>
+                            </svg>
+                        </button>
+                        <t t-if="state.msgType == 'internal'">
+                            <span class="wa-internal-badge">Internal Note</span>
+                        </t>
+                        <input class="wa-input-field" t-att-class="{'wa-input-field--internal': state.msgType == 'internal'}"
+                            type="text"
+                            t-att-placeholder="state.msgType == 'internal' ? 'Write an internal note...' : 'Type a message'"
+                            t-model="state.draftMessage" t-on-keydown="onKeyDown"/>
+                        <button class="wa-note-toggle" t-att-class="{'wa-note-toggle--active': state.msgType == 'internal'}" title="Toggle internal note" t-on-click="toggleMsgType">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                                <polyline points="14 2 14 8 20 8"/>
+                                <line x1="16" y1="13" x2="8" y2="13"/>
+                                <line x1="16" y1="17" x2="8" y2="17"/>
+                            </svg>
+                        </button>
+                        <button class="wa-send-btn" t-att-class="{'wa-send-btn--active': canSend}" title="Send" t-on-click="sendMessage">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2">
+                                <line x1="22" y1="2" x2="11" y2="13"/>
+                                <polygon points="22 2 15 22 11 13 2 9 22 2"/>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <!-- Contact info panel -->
+                    <t t-if="state.showInfoPanel">
+                        <div class="wa-info-panel">
+                            <div class="wa-info-header">
+                                <button class="wa-icon-btn" t-on-click="closeInfoPanel">
+                                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <line x1="18" y1="6" x2="6" y2="18"/>
+                                        <line x1="6" y1="6" x2="18" y2="18"/>
+                                    </svg>
+                                </button>
+                                Contact Info
+                            </div>
+                            <div class="wa-info-avatar" t-att-style="'background:' + state.activeThread.color">
+                                <t t-esc="state.activeThread.initials"/>
+                            </div>
+                            <div class="wa-info-name"><t t-esc="state.activeThread.name"/></div>
+                            <div class="wa-info-phone"><t t-esc="state.activeThread.phone"/></div>
+                            <div class="wa-info-section">
+                                <div class="wa-info-section-title">About</div>
+                                <div style="font-size:14px;color:var(--wa-text-muted);">Available for business enquiries.</div>
+                            </div>
+                            <div class="wa-info-section">
+                                <div class="wa-info-section-title">Privacy &amp; Security</div>
+                                <div class="wa-info-row">
+                                    <span>Disappearing messages</span>
+                                    <button class="wa-info-toggle" title="Toggle"/>
+                                </div>
+                                <div class="wa-info-encrypt">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <rect x="3" y="11" width="18" height="11" rx="2"/>
+                                        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                                    </svg>
+                                    Messages are end-to-end encrypted
+                                </div>
+                            </div>
+                            <div class="wa-info-actions">
+                                <button class="wa-info-action-btn wa-info-action-btn--danger">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="3 6 5 6 21 6"/>
+                                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/>
+                                        <path d="M10 11v6M14 11v6"/>
+                                        <path d="M9 6V4h6v2"/>
+                                    </svg>
+                                    Clear Chat
+                                </button>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+            </div>
+        </div>
+    </t>
+
+    <!-- ==================== PHONE NUMBERS VIEW ==================== -->
+    <t t-name="whatsapp_dashboard.PhoneNumbersView" owl="1">
+        <div class="wa-body wa-phone-numbers-body">
+            <div class="wa-phone-tabs">
+                <button class="wa-phone-tab" t-att-class="{'wa-phone-tab--active': state.phoneTab == 'my_numbers'}" t-on-click="() => this.state.phoneTab = 'my_numbers'">My Numbers</button>
+                <button class="wa-phone-tab" t-att-class="{'wa-phone-tab--active': state.phoneTab == 'buy_number'}" t-on-click="() => this.state.phoneTab = 'buy_number'">Buy Number</button>
+            </div>
+
+            <t t-if="state.phoneTab == 'my_numbers'">
+                <t t-call="whatsapp_dashboard.MyNumbersList"/>
+            </t>
+            <t t-if="state.phoneTab == 'buy_number'">
+                <t t-call="whatsapp_dashboard.BuyNumberView"/>
+            </t>
+        </div>
+    </t>
+
+    <!-- My Numbers List -->
+    <t t-name="whatsapp_dashboard.MyNumbersList" owl="1">
+        <div class="wa-numbers-container">
+            <div class="wa-numbers-header">
+                <h2>My Phone Numbers</h2>
+                <button class="wa-btn-primary" t-on-click="() => this.state.phoneTab = 'buy_number'">Buy New Number</button>
+            </div>
+            <div class="wa-numbers-list">
+                <t t-if="state.myNumbers.length == 0">
+                    <div class="wa-numbers-empty">
+                        <p>No phone numbers yet. <a t-on-click="() => this.state.phoneTab = 'buy_number'">Buy a number</a></p>
+                    </div>
+                </t>
+                <t t-foreach="state.myNumbers" t-as="num" t-key="num.number">
+                    <div class="wa-number-item">
+                        <div class="wa-number-info">
+                            <span class="wa-number" t-esc="num.number"/>
+                            <span class="wa-number-status" t-att-class="num.status == 'Active' ? 'wa-number-status--active' : 'wa-number-status--pending'" t-esc="num.status"/>
+                        </div>
+                        <div class="wa-number-actions">
+                            <button class="wa-btn-sm">Configure</button>
+                            <button class="wa-btn-confirm-payment" t-on-click="() => this.openPaymentModal('Phone Number Plan', '5.00')">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <rect x="1" y="4" width="22" height="16" rx="2"/>
+                                    <line x1="1" y1="10" x2="23" y2="10"/>
+                                </svg>
+                                Confirm Payment
+                            </button>
+                            <button class="wa-btn-sm wa-btn-danger">Delete</button>
+                        </div>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </t>
+
+    <!-- Buy Number View -->
+    <t t-name="whatsapp_dashboard.BuyNumberView" owl="1">
+        <div class="wa-buy-container">
+            <div class="wa-buy-header">
+                <h2>Buy WhatsApp Number</h2>
+                <p>Get a Twilio phone number to use with WhatsApp</p>
+                <div class="wa-buy-steps">
+                    <span class="wa-step wa-step--active">1. Search Available Numbers</span>
+                    <span class="wa-step">2. Confirm &amp; Purchase</span>
+                    <span class="wa-step">3. Activate WhatsApp</span>
+                    <span class="wa-step">4. Verify Number</span>
+                    <span class="wa-step">5. Completed</span>
+                </div>
+            </div>
+
+            <div class="wa-buy-content">
+                <div class="wa-buy-filters">
+                    <div class="wa-filter-group">
+                        <label>Country</label>
+                        <select t-model="state.buyCountry">
+                            <option value="NP">Nepal (+977)</option>
+                            <option value="US">United States (+1)</option>
+                            <option value="GB">United Kingdom (+44)</option>
+                            <option value="IN">India (+91)</option>
+                            <option value="CA">Canada (+1)</option>
+                            <option value="AU">Australia (+61)</option>
+                        </select>
+                    </div>
+                    <button class="wa-btn-primary" t-on-click="searchNumbers" t-att-disabled="state.isLoadingNumbers">
+                        <t t-if="state.isLoadingNumbers">Searching...</t>
+                        <t t-else="">Search Numbers</t>
+                    </button>
+                </div>
+
+                <!-- Number Table -->
+                <div class="wa-number-table">
+                    <div class="wa-table-header">
+                        <span>Phone Number</span>
+                        <span>Type</span>
+                        <span>Capabilities</span>
+                        <span>Monthly Cost</span>
+                        <span>Setup Fee</span>
+                        <span>Action</span>
+                    </div>
+
+                    <t t-if="state.availableNumbers.length == 0 and !state.isLoadingNumbers">
+                        <div class="wa-table-row" style="grid-column:1/-1;text-align:center;color:#667781;padding:20px;">
+                            <span>No numbers available. Click "Search Numbers" to fetch from Twilio.</span>
+                        </div>
+                    </t>
+
+                    <t t-if="state.isLoadingNumbers">
+                        <div class="wa-table-row" style="grid-column:1/-1;text-align:center;color:#667781;padding:20px;">
+                            <span>Loading numbers...</span>
+                        </div>
+                    </t>
+
+                    <t t-foreach="paginatedNumbers" t-as="num" t-key="num.id">
+                        <div class="wa-table-row">
+                            <span class="wa-number-display" t-esc="num.number"/>
+                            <span t-esc="num.type"/>
+                            <span t-esc="num.capabilities"/>
+                            <span>$<t t-esc="num.monthlyCost"/></span>
+                            <span>$<t t-esc="num.setupFee"/></span>
+                            <span><button class="wa-btn-buy" t-on-click="() => this.buyNumber(num)">Buy Number</button></span>
+                        </div>
+                    </t>
+                </div>
+
+                <!-- Pagination -->
+                <t t-if="state.availableNumbers.length > state.itemsPerPage">
+                    <div class="wa-buy-pagination">
+                        <button class="wa-page-btn" t-on-click="() => this.goToPage(state.currentPage - 1)" t-att-disabled="state.currentPage &lt;= 1">«</button>
+                        <t t-foreach="totalPages" t-as="page" t-key="page_index">
+                            <button class="wa-page-btn" t-att-class="{'wa-page-btn--active': state.currentPage === page_index + 1}" t-on-click="() => this.goToPage(page_index + 1)">
+                                <t t-esc="page_index + 1"/>
+                            </button>
+                        </t>
+                        <button class="wa-page-btn" t-on-click="() => this.goToPage(state.currentPage + 1)" t-att-disabled="state.currentPage >= totalPages">»</button>
+                    </div>
+                </t>
+
+                <!-- Estimate Cost -->
+                <div class="wa-buy-estimate">
+                    <h4>Estimate Cost</h4>
+                    <div class="wa-estimate-row"><span>Monthly Cost</span><span>$5.00</span></div>
+                    <div class="wa-estimate-row"><span>Setup Fee</span><span>$0.00</span></div>
+                    <div class="wa-estimate-row wa-estimate-total"><span>Total</span><span>$5.00 /month</span></div>
+                    <p class="wa-estimate-note">Prices may vary based on country and number type.</p>
+
+                    <!-- Confirm Payment Button -->
+                    <div style="margin-top:16px;">
+                        <button class="wa-btn-confirm-payment-lg" t-on-click="() => this.openPaymentModal('Pro Plan', '99.00', 'WhatsApp Dashboard Pro Subscription')">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="1" y="4" width="22" height="16" rx="2"/>
+                                <line x1="1" y1="10" x2="23" y2="10"/>
+                            </svg>
+                            Confirm Payment
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Why Buy Section -->
+                <div class="wa-buy-why">
+                    <h4>Why buy a WhatsApp number?</h4>
+                    <ul>
+                        <li>✓ Send and receive WhatsApp messages</li>
+                        <li>✓ Business communication made easy</li>
+                        <li>✓ Global coverage with local numbers</li>
+                        <li>✓ WhatsApp Business API ready</li>
+                        <li>✓ No additional hardware required</li>
+                        <li>✓ Pay as you go pricing</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <!-- ==================== STRIPE PAYMENT MODAL ==================== -->
+    <t t-name="whatsapp_dashboard.StripePaymentModal" owl="1">
+        <div class="wa-stripe-overlay" t-on-click.self="closePaymentModal">
+            <div class="wa-stripe-modal">
+                <!-- Left panel: plan summary -->
+                <div class="wa-stripe-left">
+                    <div class="wa-stripe-brand">
+                        <svg width="20" height="20" viewBox="0 0 32 32">
+                            <circle cx="16" cy="16" r="16" fill="#25D366"/>
+                        </svg>
+                        <span>Odoo WhatsApp</span>
+                    </div>
+                    <div class="wa-stripe-plan-name">
+                        Subscribe to <strong><t t-esc="state.paymentPlan"/></strong>
+                    </div>
+                    <div class="wa-stripe-price">
+                        $<t t-esc="state.paymentAmount"/>
+                        <span class="wa-stripe-price-period">per month</span>
+                    </div>
+                    <hr class="wa-stripe-divider"/>
+
+                    <div class="wa-stripe-line-item">
+                        <div class="wa-stripe-li-icon">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="#6C5CE7">
+                                <rect x="1" y="4" width="22" height="16" rx="2"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <div style="font-size:14px;font-weight:600;color:#1a1a2e;">
+                                <t t-esc="state.paymentPlan"/>
+                            </div>
+                            <div style="font-size:12px;color:#667781;">Billed monthly</div>
+                        </div>
+                        <div style="margin-left:auto;font-size:14px;font-weight:600;">
+                            $<t t-esc="state.paymentAmount"/>
+                        </div>
+                    </div>
+
+                    <hr class="wa-stripe-divider"/>
+                    <div class="wa-stripe-subtotal"><span>Subtotal</span><span>$<t t-esc="state.paymentAmount"/></span></div>
+                    <div class="wa-stripe-total"><span>Total due today</span><span>$<t t-esc="state.paymentAmount"/></span></div>
+
+                    <div class="wa-stripe-powered">
+                        <span style="font-size:11px;color:#8696a0;">Powered by</span>
+                        <svg width="40" height="16" viewBox="0 0 60 25">
+                            <text y="18" font-size="18" font-weight="700" fill="#6772e5">stripe</text>
+                        </svg>
+                    </div>
+                </div>
+
+                <!-- Right panel: payment form -->
+                <div class="wa-stripe-right">
+                    <button class="wa-stripe-close" t-on-click="closePaymentModal">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="18" y1="6" x2="6" y2="18"/>
+                            <line x1="6" y1="6" x2="18" y2="18"/>
+                        </svg>
+                    </button>
+
+                    <!-- Payment form - NO Google or Link buttons -->
+                    <div class="wa-stripe-form">
+                        <div class="wa-stripe-field-group">
+                            <label>Email</label>
+                            <input type="email" placeholder="john@example.com" class="wa-stripe-input" t-model="state.cardEmail"/>
+                        </div>
+
+                        <div class="wa-stripe-field-group">
+                            <label>Card information</label>
+                            <div class="wa-stripe-card-wrap">
+                                <input type="text" placeholder="1234 1234 1234 1234" class="wa-stripe-input wa-stripe-card-number"/>
+                                <div class="wa-stripe-card-icons">
+                                    <svg width="28" height="18" viewBox="0 0 48 30">
+                                        <rect width="48" height="30" rx="4" fill="#1A1F71"/>
+                                        <text x="8" y="20" font-size="11" font-weight="700" fill="#F7F7F7">VISA</text>
+                                    </svg>
+                                    <svg width="28" height="18" viewBox="0 0 48 30">
+                                        <rect width="48" height="30" rx="4" fill="#f5f5f5"/>
+                                        <circle cx="18" cy="15" r="9" fill="#EB001B" opacity=".9"/>
+                                        <circle cx="30" cy="15" r="9" fill="#F79E1B" opacity=".9"/>
+                                    </svg>
+                                </div>
+                                <div class="wa-stripe-card-row">
+                                    <input type="text" placeholder="MM / YY" class="wa-stripe-input wa-stripe-half"/>
+                                    <input type="text" placeholder="CVC" class="wa-stripe-input wa-stripe-half"/>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="wa-stripe-field-group">
+                            <label>Name on card</label>
+                            <input type="text" placeholder="John Doe" class="wa-stripe-input" t-model="state.cardHolderName"/>
+                        </div>
+
+                        <div class="wa-stripe-field-group">
+                            <label>Country or region</label>
+                            <select class="wa-stripe-input" t-model="state.cardCountry">
+                                <option value="US">United States</option>
+                                <option value="NP">Nepal</option>
+                                <option value="IN">India</option>
+                                <option value="GB">United Kingdom</option>
+                                <option value="CA">Canada</option>
+                                <option value="AU">Australia</option>
+                            </select>
+                        </div>
+
+                        <div class="wa-stripe-field-group">
+                            <label>ZIP / Postal code</label>
+                            <input type="text" placeholder="ZIP" class="wa-stripe-input" t-model="state.cardZip"/>
+                        </div>
+
+                        <!-- Error message -->
+                        <t t-if="state.paymentError">
+                            <div style="color:#f15c6d;font-size:13px;padding:8px;background:#fff0f0;border-radius:6px;">
+                                <t t-esc="state.paymentError"/>
+                            </div>
+                        </t>
+
+                        <button class="wa-stripe-submit-btn" t-on-click="processPayment" t-att-disabled="state.isProcessingPayment">
+                            <t t-if="state.isProcessingPayment">Processing...</t>
+                            <t t-else="">Subscribe</t>
+                        </button>
+
+                        <p class="wa-stripe-terms">By confirming your subscription, you allow Odoo to charge you for future payments in accordance with their terms.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+    <!-- ==================== SUBACCOUNTS VIEW ==================== -->
+    <t t-name="whatsapp_dashboard.SubaccountsView" owl="1">
+        <div class="wa-subaccounts-root">
+            <div class="wa-subaccounts-header">
+                <div class="wa-subaccounts-header-left">
+                    <div class="wa-subaccounts-breadcrumb">
+                        <a t-on-click="() => this.setNavItem('dashboard')">Subaccounts</a>
+                        <span>&gt;</span>
+                        <span>Manage Subaccounts</span>
+                    </div>
+                    <h1 class="wa-subaccounts-title">Subaccounts</h1>
+                    <p class="wa-subaccounts-subtitle">Create and manage your subaccounts.</p>
+                </div>
+                <div class="wa-subaccounts-header-right">
+                    <button class="wa-btn-create-subaccount" t-on-click="openCreateModal">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                            <line x1="12" y1="5" x2="12" y2="19"/>
+                            <line x1="5" y1="12" x2="19" y2="12"/>
+                        </svg>
+                        Create Subaccount
+                    </button>
+                </div>
+            </div>
+
+            <!-- Stats -->
+            <div class="wa-subaccounts-stats">
+                <div class="wa-stat-card">
+                    <div class="wa-stat-icon wa-stat-icon--subaccounts">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                    </div>
+                    <div class="wa-stat-info">
+                        <span class="wa-stat-value" t-esc="state.subaccounts.length"/>
+                        <span class="wa-stat-label">Total Subaccounts</span>
+                    </div>
+                </div>
+                <div class="wa-stat-card">
+                    <div class="wa-stat-icon wa-stat-icon--phones">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                        </svg>
+                    </div>
+                    <div class="wa-stat-info">
+                        <span class="wa-stat-value" t-esc="state.totalPhoneNumbers"/>
+                        <span class="wa-stat-label">Phone Numbers</span>
+                    </div>
+                </div>
+                <div class="wa-stat-card">
+                    <div class="wa-stat-icon wa-stat-icon--sms">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+                        </svg>
+                    </div>
+                    <div class="wa-stat-info">
+                        <span class="wa-stat-value" t-esc="formatNumber(state.totalSmsSent)"/>
+                        <span class="wa-stat-label">SMS Sent</span>
+                    </div>
+                </div>
+                <div class="wa-stat-card">
+                    <div class="wa-stat-icon wa-stat-icon--voice">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                        </svg>
+                    </div>
+                    <div class="wa-stat-info">
+                        <span class="wa-stat-value" t-esc="formatNumber(state.totalVoiceMinutes)"/>
+                        <span class="wa-stat-label">Voice Minutes</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Toolbar -->
+            <div class="wa-subaccounts-toolbar">
+                <div class="wa-subaccounts-search">
+                    <svg class="wa-subaccounts-search-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"/>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                    </svg>
+                    <input class="wa-subaccounts-search-input" type="text" placeholder="Search subaccounts..." t-model="state.subSearchQuery"/>
+                </div>
+                <div class="wa-subaccounts-filters">
+                    <select class="wa-subaccounts-filter-select" t-model="state.filterStatus">
+                        <option value="all">All Status</option>
+                        <option value="active">Active</option>
+                        <option value="suspended">Suspended</option>
+                    </select>
+                    <select class="wa-subaccounts-filter-select" t-model="state.filterType">
+                        <option value="all">All Types</option>
+                        <option value="standard">Standard</option>
+                        <option value="restricted">Restricted</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Table -->
+            <div class="wa-subaccounts-table-container">
+                <t t-if="filteredSubaccounts.length === 0">
+                    <div class="wa-subaccounts-empty">
+                        <div class="wa-empty-icon">
+                            <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/>
+                                <circle cx="9" cy="7" r="4"/>
+                                <path d="M23 21v-2a4 4 0 0 0-3-3.87"/>
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                            </svg>
+                        </div>
+                        <h3 class="wa-empty-title">No subaccounts found</h3>
+                        <p class="wa-empty-subtitle">Create your first subaccount to manage customers separately.</p>
+                    </div>
+                </t>
+                <t t-if="filteredSubaccounts.length > 0">
+                    <table class="wa-subaccounts-table">
+                        <thead>
+                            <tr>
+                                <th>Subaccount</th>
+                                <th>Friendly Name</th>
+                                <th>Status</th>
+                                <th>Phone Numbers</th>
+                                <th>Usage</th>
+                                <th>Created On</th>
+                                <th style="text-align:right;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="filteredSubaccounts" t-as="sub" t-key="sub.id">
+                                <tr>
+                                    <td>
+                                        <div class="wa-subaccount-cell">
+                                            <div class="wa-subaccount-avatar" t-att-style="'background:' + sub.color" t-esc="sub.initials"/>
+                                            <div class="wa-subaccount-info">
+                                                <span class="wa-subaccount-name" t-esc="sub.unique_name"/>
+                                                <span class="wa-subaccount-sid" t-esc="sub.sid"/>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div class="wa-subaccount-info">
+                                            <span class="wa-subaccount-name" t-esc="sub.name"/>
+                                            <span class="wa-subaccount-email" t-esc="sub.email"/>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <span t-att-class="{'wa-status-badge wa-status-badge--active': sub.status === 'active', 'wa-status-badge wa-status-badge--suspended': sub.status === 'suspended'}" t-esc="sub.status.charAt(0).toUpperCase() + sub.status.slice(1)"/>
+                                    </td>
+                                    <td><span t-esc="sub.phone_numbers + ' Numbers'"/></td>
+                                    <td><span t-esc="'$' + sub.usage_cost.toFixed(2)"/></td>
+                                    <td><span t-esc="sub.created_on"/></td>
+                                    <td>
+                                        <div class="wa-subaccount-actions">
+                                            <button class="wa-action-btn" title="View" t-on-click="() => this.openDetailPanel(sub)">
+                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                    <circle cx="12" cy="12" r="1"/>
+                                                    <circle cx="19" cy="12" r="1"/>
+                                                    <circle cx="5" cy="12" r="1"/>
+                                                </svg>
+                                            </button>
+                                            <button class="wa-action-btn" title="Edit" t-on-click="() => this.openEditModal(sub)">
+                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                                                </svg>
+                                            </button>
+                                            <button class="wa-action-btn wa-action-btn--danger" title="Delete" t-on-click="() => this.confirmDelete(sub)">
+                                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                                    <polyline points="3 6 5 6 21 6"/>
+                                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/>
+                                                    <path d="M10 11v6M14 11v6"/>
+                                                    <path d="M9 6V4h6v2"/>
+                                                </svg>
+                                            </button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </t>
+            </div>
+
+            <!-- Create Modal -->
+            <t t-if="state.showCreateModal">
+                <div class="wa-modal-overlay" t-on-click.self="closeCreateModal">
+                    <div class="wa-modal">
+                        <div class="wa-modal-header">
+                            <h2>Create Subaccount</h2>
+                            <button class="wa-modal-close" t-on-click="closeCreateModal">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="18" y1="6" x2="6" y2="18"/>
+                                    <line x1="6" y1="6" x2="18" y2="18"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="wa-modal-body">
+                            <div class="wa-form-group">
+                                <label>Friendly Name <span class="wa-required">*</span></label>
+                                <input class="wa-form-input" type="text" t-model="state.newSubaccount.name" placeholder="Customer A"/>
+                            </div>
+                            <div class="wa-form-group">
+                                <label>Unique Name <span class="wa-required">*</span></label>
+                                <input class="wa-form-input" type="text" t-model="state.newSubaccount.uniqueName" placeholder="customer_a"/>
+                            </div>
+                            <div class="wa-form-group">
+                                <label>Email</label>
+                                <input class="wa-form-input" type="email" t-model="state.newSubaccount.email" placeholder="admin@customer-a.com"/>
+                            </div>
+                            <div class="wa-form-group">
+                                <label>Capabilities</label>
+                                <div class="wa-checkbox-group">
+                                    <div t-att-class="{'wa-checkbox-item': true, 'wa-checkbox-item--checked': state.newSubaccount.capabilities.voice}" t-on-click="() => this.toggleCapability('voice')">
+                                        <div class="wa-checkbox-box">
+                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3">
+                                                <polyline points="20 6 9 17 4 12"/>
+                                            </svg>
+                                        </div>
+                                        <span class="wa-checkbox-label">Voice</span>
+                                    </div>
+                                    <div t-att-class="{'wa-checkbox-item': true, 'wa-checkbox-item--checked': state.newSubaccount.capabilities.sms}" t-on-click="() => this.toggleCapability('sms')">
+                                        <div class="wa-checkbox-box">
+                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3">
+                                                <polyline points="20 6 9 17 4 12"/>
+                                            </svg>
+                                        </div>
+                                        <span class="wa-checkbox-label">SMS</span>
+                                    </div>
+                                    <div t-att-class="{'wa-checkbox-item': true, 'wa-checkbox-item--checked': state.newSubaccount.capabilities.mms}" t-on-click="() => this.toggleCapability('mms')">
+                                        <div class="wa-checkbox-box">
+                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3">
+                                                <polyline points="20 6 9 17 4 12"/>
+                                            </svg>
+                                        </div>
+                                        <span class="wa-checkbox-label">MMS</span>
+                                    </div>
+                                    <div t-att-class="{'wa-checkbox-item': true, 'wa-checkbox-item--checked': state.newSubaccount.capabilities.whatsapp}" t-on-click="() => this.toggleCapability('whatsapp')">
+                                        <div class="wa-checkbox-box">
+                                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3">
+                                                <polyline points="20 6 9 17 4 12"/>
+                                            </svg>
+                                        </div>
+                                        <span class="wa-checkbox-label">WhatsApp</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="wa-modal-footer">
+                            <button class="wa-btn wa-btn-secondary" t-on-click="closeCreateModal">Cancel</button>
+                            <button class="wa-btn wa-btn-primary" t-on-click="createSubaccount" t-att-disabled="!state.newSubaccount.name || !state.newSubaccount.uniqueName || state.creating">
+                                <t t-if="state.creating">Creating...</t>
+                                <t t-else="">Create Subaccount</t>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </t>
+
+            <!-- Edit Modal -->
+            <t t-if="state.showEditModal">
+                <div class="wa-modal-overlay" t-on-click.self="closeEditModal">
+                    <div class="wa-modal">
+                        <div class="wa-modal-header">
+                            <h2>Edit Subaccount</h2>
+                            <button class="wa-modal-close" t-on-click="closeEditModal">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <line x1="18" y1="6" x2="6" y2="18"/>
+                                    <line x1="6" y1="6" x2="18" y2="18"/>
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="wa-modal-body">
+                            <div class="wa-form-group">
+                                <label>Friendly Name</label>
+                                <input class="wa-form-input" type="text" t-model="state.editSubaccount.name"/>
+                            </div>
+                            <div class="wa-form-group">
+                                <label>Unique Name</label>
+                                <input class="wa-form-input" type="text" t-model="state.editSubaccount.uniqueName"/>
+                            </div>
+                            <div class="wa-form-group">
+                                <label>Email</label>
+                                <input class="wa-form-input" type="email" t-model="state.editSubaccount.email"/>
+                            </div>
+                        </div>
+                        <div class="wa-modal-footer">
+                            <button class="wa-btn wa-btn-secondary" t-on-click="closeEditModal">Cancel</button>
+                            <button class="wa-btn wa-btn-primary" t-on-click="updateSubaccount" t-att-disabled="!state.editSubaccount.name">Save Changes</button>
+                        </div>
+                    </div>
+                </div>
+            </t>
+
+            <!-- Detail Panel -->
+            <t t-if="state.showDetailPanel and state.selectedSubaccount">
+                <div class="wa-subaccount-detail">
+                    <div class="wa-detail-header">
+                        <button class="wa-detail-close" t-on-click="closeDetailPanel">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="18" y1="6" x2="6" y2="18"/>
+                                <line x1="6" y1="6" x2="18" y2="18"/>
+                            </svg>
+                        </button>
+                        <span class="wa-detail-title">Subaccount Details</span>
+                    </div>
+                    <div class="wa-detail-body">
+                        <div class="wa-detail-avatar-section">
+                            <div class="wa-detail-avatar" t-att-style="'background:' + state.selectedSubaccount.color">
+                                <t t-esc="state.selectedSubaccount.initials"/>
+                            </div>
+                            <div class="wa-detail-name"><t t-esc="state.selectedSubaccount.name"/></div>
+                            <div class="wa-detail-type"><t t-esc="state.selectedSubaccount.subaccount_type"/></div>
+                        </div>
+                        <div class="wa-detail-section">
+                            <div class="wa-detail-section-title">Information</div>
+                            <div class="wa-detail-row">
+                                <span class="wa-detail-label">Unique Name</span>
+                                <span class="wa-detail-value"><t t-esc="state.selectedSubaccount.unique_name"/></span>
+                            </div>
+                            <div class="wa-detail-row">
+                                <span class="wa-detail-label">Email</span>
+                                <span class="wa-detail-value"><t t-esc="state.selectedSubaccount.email"/></span>
+                            </div>
+                            <div class="wa-detail-row">
+                                <span class="wa-detail-label">SID</span>
+                                <span class="wa-detail-value"><t t-esc="state.selectedSubaccount.sid"/></span>
+                            </div>
+                            <div class="wa-detail-row">
+                                <span class="wa-detail-label">Status</span>
+                                <span class="wa-detail-value" t-esc="state.selectedSubaccount.status"/>
+                            </div>
+                            <div class="wa-detail-row">
+                                <span class="wa-detail-label">Phone Numbers</span>
+                                <span class="wa-detail-value" t-esc="state.selectedSubaccount.phone_numbers"/>
+                            </div>
+                            <div class="wa-detail-row">
+                                <span class="wa-detail-label">SMS Sent</span>
+                                <span class="wa-detail-value" t-esc="state.selectedSubaccount.sms_sent"/>
+                            </div>
+                            <div class="wa-detail-row">
+                                <span class="wa-detail-label">Voice Minutes</span>
+                                <span class="wa-detail-value" t-esc="state.selectedSubaccount.voice_minutes"/>
+                            </div>
+                            <div class="wa-detail-row">
+                                <span class="wa-detail-label">Usage Cost</span>
+                                <span class="wa-detail-value">$<t t-esc="state.selectedSubaccount.usage_cost.toFixed(2)"/></span>
+                            </div>
+                            <div class="wa-detail-row">
+                                <span class="wa-detail-label">Capabilities</span>
+                                <span class="wa-detail-value"><t t-esc="state.selectedSubaccount.capabilities"/></span>
+                            </div>
+                        </div>
+                        <div class="wa-detail-actions">
+                            <button class="wa-detail-action-btn" t-on-click="() => this.openEditModal(state.selectedSubaccount)">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+                                    <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+                                </svg>
+                                Edit Subaccount
+                            </button>
+                            <button class="wa-detail-action-btn wa-detail-action-btn--danger" t-on-click="() => this.confirmDelete(state.selectedSubaccount)">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <polyline points="3 6 5 6 21 6"/>
+                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/>
+                                    <path d="M10 11v6M14 11v6"/>
+                                    <path d="M9 6V4h6v2"/>
+                                </svg>
+                                Delete Subaccount
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </div>
+    </t>
+</templates>
