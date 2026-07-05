@@ -18,9 +18,9 @@ _logger = logging.getLogger(__name__)
 # Set to False when you have a Twilio account that can purchase numbers.
 MOCK_PURCHASE = True
 
-TWILIO_ACCOUNT_SID = 'AC5b39938c26320f5d6207df9b59e5d345'
-TWILIO_AUTH_TOKEN  = 'ed4d2f19d3cd734b9f2dba597beae50e'
-TWILIO_FROM = 'whatsapp:+14155238886'
+TWILIO_ACCOUNT_SID = 'abc'
+TWILIO_AUTH_TOKEN  = 'abc'
+TWILIO_FROM = 'wabc'
 TWILIO_API_URL = (
     f'https://api.twilio.com/2010-04-01/Accounts/'
     f'{TWILIO_ACCOUNT_SID}/Messages.json'
