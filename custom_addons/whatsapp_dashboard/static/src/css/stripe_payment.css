@@ -1,0 +1,326 @@
+/* stripe_payment.css — Stripe-style payment modal + confirm buttons */
+
+/* Confirm Payment buttons (in Phone Numbers list) */
+.wa-btn-confirm-payment {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 5px 14px;
+    border: none;
+    border-radius: 6px;
+    background: #635bff;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.15s, transform 0.1s;
+}
+.wa-btn-confirm-payment:hover {
+    background: #4f46e5;
+}
+.wa-btn-confirm-payment:active {
+    transform: scale(0.97);
+}
+
+/* Large confirm payment button (in Buy Number section) */
+.wa-btn-confirm-payment-lg {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 28px;
+    border: none;
+    border-radius: 8px;
+    background: #635bff;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.15s, box-shadow 0.15s;
+    box-shadow: 0 4px 14px rgba(99, 91, 255, 0.35);
+}
+.wa-btn-confirm-payment-lg:hover {
+    background: #4f46e5;
+    box-shadow: 0 6px 20px rgba(99, 91, 255, 0.45);
+}
+
+/* Stripe Payment Modal Overlay */
+.wa-stripe-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 99999;
+    animation: wa-stripe-fade 0.2s ease;
+}
+@keyframes wa-stripe-fade {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.wa-stripe-modal {
+    display: flex;
+    width: 780px;
+    max-width: 95vw;
+    max-height: 95vh;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+    animation: wa-stripe-up 0.28s ease;
+    background: #fff;
+}
+@keyframes wa-stripe-up {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Left panel — plan summary */
+.wa-stripe-left {
+    width: 320px;
+    min-width: 280px;
+    background: #f6f9fc;
+    padding: 36px 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    border-right: 1px solid #e0e6ed;
+    flex-shrink: 0;
+}
+
+.wa-stripe-brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #1a1a2e;
+    margin-bottom: 4px;
+}
+
+.wa-stripe-plan-name {
+    font-size: 14px;
+    color: #6b7280;
+}
+
+.wa-stripe-price {
+    font-size: 36px;
+    font-weight: 700;
+    color: #1a1a2e;
+    line-height: 1.1;
+}
+
+.wa-stripe-price-period {
+    font-size: 14px;
+    font-weight: 400;
+    color: #6b7280;
+    margin-left: 4px;
+}
+
+.wa-stripe-divider {
+    border: none;
+    border-top: 1px solid #e0e6ed;
+    margin: 2px 0;
+}
+
+.wa-stripe-line-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 4px 0;
+}
+
+.wa-stripe-li-icon {
+    width: 36px;
+    height: 26px;
+    border-radius: 4px;
+    background: #e8e6ff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.wa-stripe-subtotal,
+.wa-stripe-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 14px;
+    color: #374151;
+}
+
+.wa-stripe-total {
+    font-size: 15px;
+    font-weight: 700;
+    color: #1a1a2e;
+    padding-top: 8px;
+    border-top: 1px solid #e0e6ed;
+}
+
+.wa-stripe-powered {
+    margin-top: auto;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* Right panel — payment form */
+.wa-stripe-right {
+    flex: 1;
+    padding: 30px;
+    overflow-y: auto;
+    position: relative;
+    background: #fff;
+}
+
+.wa-stripe-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 6px;
+    background: transparent;
+    color: #9ca3af;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.13s;
+}
+.wa-stripe-close:hover {
+    background: #f3f4f6;
+    color: #374151;
+}
+
+.wa-stripe-form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.wa-stripe-field-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.wa-stripe-field-group label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #374151;
+}
+
+.wa-stripe-input {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1.5px solid #d1d5db;
+    border-radius: 7px;
+    font-size: 14px;
+    color: #1a1a2e;
+    background: #fff;
+    outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    box-sizing: border-box;
+    appearance: none;
+    -webkit-appearance: none;
+}
+.wa-stripe-input:focus {
+    border-color: #635bff;
+    box-shadow: 0 0 0 3px rgba(99, 91, 255, 0.1);
+}
+.wa-stripe-input::placeholder {
+    color: #9ca3af;
+}
+
+/* Card row */
+.wa-stripe-card-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    border: 1.5px solid #d1d5db;
+    border-radius: 7px;
+    overflow: hidden;
+    position: relative;
+}
+.wa-stripe-card-wrap:focus-within {
+    border-color: #635bff;
+    box-shadow: 0 0 0 3px rgba(99, 91, 255, 0.1);
+}
+
+.wa-stripe-card-number {
+    border: none !important;
+    border-radius: 0 !important;
+    border-bottom: 1px solid #e5e7eb !important;
+    box-shadow: none !important;
+    padding-right: 90px;
+}
+
+.wa-stripe-card-icons {
+    position: absolute;
+    right: 12px;
+    top: 10px;
+    display: flex;
+    gap: 4px;
+    pointer-events: none;
+}
+
+.wa-stripe-card-row {
+    display: flex;
+}
+
+.wa-stripe-half {
+    flex: 1;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+}
+.wa-stripe-half:first-child {
+    border-right: 1px solid #e5e7eb !important;
+}
+
+.wa-stripe-submit-btn {
+    width: 100%;
+    padding: 13px;
+    background: #635bff;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.15s, box-shadow 0.15s;
+    margin-top: 4px;
+    box-shadow: 0 4px 14px rgba(99, 91, 255, 0.3);
+}
+.wa-stripe-submit-btn:hover:not(:disabled) {
+    background: #4f46e5;
+    box-shadow: 0 6px 20px rgba(99, 91, 255, 0.4);
+}
+.wa-stripe-submit-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.wa-stripe-terms {
+    font-size: 11px;
+    color: #9ca3af;
+    text-align: center;
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    .wa-stripe-modal {
+        flex-direction: column;
+    }
+    .wa-stripe-left {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid #e0e6ed;
+        padding: 20px;
+    }
+}

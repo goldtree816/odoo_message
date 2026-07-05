@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- 1. Configure the native Stripe payment provider -->
+        <record id="payment.payment_provider_stripe" model="payment.provider">
+            <field name="stripe_publishable_key">pk_test_51ToEVJ7epnyyPRb6UyInDWL1EgFBFxtrT9I32zBZgJaMSJP6pnrA8IRcclBouVU80mkrf1chZf3F32A6MxBpjajQ00zGtHaKys</field>
+            <field name="stripe_secret_key">sk_test_51ToEVJ7epnyyPRb6eO15RP2yNsmyi6cYGhWeM3zNwMaIwSnMKtfj21yUpDAuD5Idikv65mbWkXs1yfYtIPkw3UiM00vvdezz9e</field>
+            <field name="state">enabled</field>                 <!-- or 'test' -->
+            <field name="is_published" eval="True"/>
+            <field name="available_on_website" eval="True"/>
+            <field name="available_on_invoice" eval="True"/>
+        </record>
+
+        <!-- 2. Set system parameters for your custom WhatsApp controller -->
+        <function model="ir.config_parameter" name="set_param">
+            <value eval="'stripe.publishable_key'"/>
+            <value eval="'pk_test_51ToEVJ7epnyyPRb6UyInDWL1EgFBFxtrT9I32zBZgJaMSJP6pnrA8IRcclBouVU80mkrf1chZf3F32A6MxBpjajQ00zGtHaKys'"/>
+        </function>
+        <function model="ir.config_parameter" name="set_param">
+            <value eval="'stripe.secret_key'"/>
+            <value eval="'sk_test_51ToEVJ7epnyyPRb6eO15RP2yNsmyi6cYGhWeM3zNwMaIwSnMKtfj21yUpDAuD5Idikv65mbWkXs1yfYtIPkw3UiM00vvdezz9e'"/>
+        </function>
+
+    </data>
+</odoo>
