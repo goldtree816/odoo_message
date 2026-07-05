@@ -53,7 +53,7 @@ class StripeController(http.Controller):
         publishable, _ = _get_stripe_keys()
         if not publishable:
             # Demo fallback key; prefer configuring system parameter.
-            publishable = "pk_test_51ToEVJ7epnyyPRb6UyInDWL1EgFBFxtrT9I32zBZgJaMSJP6pnrA8IRcclBouVU80mkrf1chZf3F32A6MxBpjajQ00zGtHaKys"
+            publishable = "abc"
         return {"publishable_key": publishable}
 
     @http.route(
@@ -79,7 +79,7 @@ class StripeController(http.Controller):
 
         publishable, _ = _get_stripe_keys()
         if not publishable:
-            publishable = "pk_test_51ToEVJ7epnyyPRb6UyInDWL1EgFBFxtrT9I32zBZgJaMSJP6pnrA8IRcclBouVU80mkrf1chZf3F32A6MxBpjajQ00zGtHaKys"
+            publishable = "abc"
 
         if MOCK_MODE:
             _logger.info("MOCK: Creating fake PaymentIntent for amount %s %s", amount_float, currency)
