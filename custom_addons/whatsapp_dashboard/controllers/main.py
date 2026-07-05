@@ -14,10 +14,9 @@ _logger = logging.getLogger(__name__)
 # Twilio credentials  (move these to Odoo config params
 # or environment variables in production)
 # ─────────────────────────────────────────────────────
-TWILIO_ACCOUNT_SID = 'AC5b39938c26320f5d6207df9b59e5d345'
-TWILIO_AUTH_TOKEN  = 'f7c9a8a481853993b532b1b65646273e'
-TWILIO_FROM = 'whatsapp:+14155238886'
-TWILIO_API_URL = (
+TWILIO_ACCOUNT_SID = 'abc'
+TWILIO_AUTH_TOKEN  = 'fabc'
+TWILIO_FROM = 'whatsapp:+14155238886abc= (
     f'https://api.twilio.com/2010-04-01/Accounts/'
     f'{TWILIO_ACCOUNT_SID}/Messages.json'
 )
