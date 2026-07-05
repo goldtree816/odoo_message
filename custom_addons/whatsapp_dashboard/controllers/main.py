@@ -10,9 +10,9 @@ from odoo.http import request
 _logger = logging.getLogger(__name__)
 
 # ── Twilio sandbox credentials ──────────────────────────────────────────────
-TWILIO_ACCOUNT_SID = 'AC5b39938c26320f5d6207df9b59e5d345'
-TWILIO_AUTH_TOKEN  = 'cb49c04cb21377148d6f8d6b2ad26543'
-TWILIO_FROM        = 'whatsapp:+14155238886'   # Twilio sandbox number
+TWILIO_ACCOUNT_SID = 'abc'
+TWILIO_AUTH_TOKEN  = 'ssd'
+TWILIO_FROM        = 'abc'   # Twilio sandbox number
 TWILIO_API_URL     = (
     f'https://api.twilio.com/2010-04-01/Accounts/'
     f'{TWILIO_ACCOUNT_SID}/Messages.json'
