@@ -10,4 +10,4 @@ ODOO_PASSWORD = os.getenv("ODOO_PASSWORD", "123")
 
 TWILIO_ACCOUNT_SID = os.getenv("TWILIO_ACCOUNT_SID", "")
 TWILIO_AUTH_TOKEN = os.getenv("TWILIO_AUTH_TOKEN", "")
-WEBHOOK_BASE_URL = os.getenv("WEBHOOK_BASE_URL", "https://your-ngrok.ngrok-free.dev")
+WEBHOOK_BASE_URL = os.getenv("WEBHOOK_BASE_URL", "ht")
