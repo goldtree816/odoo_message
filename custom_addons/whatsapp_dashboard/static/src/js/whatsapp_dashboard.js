@@ -80,9 +80,19 @@ function getFileTypeCategory(mimetype, filename) {
 }
 
 export class WhatsAppDashboard extends Component {
+    // Main OWL component for the WhatsApp dashboard UI.
+    // It communicates with Odoo backend via JSON-RPC endpoints exposed in:
+    // - controllers/main.py (threads/messages/purchased numbers/media upload)
+    // - controllers/stripe_controller.py (Stripe publishable key + PaymentIntent)
     static template = "whatsapp_dashboard.WhatsAppDashboard";
-    // Accept all props (remove restrictive empty object)
-    static props = true;
+    // Accept any props (prevents OWL “unknown key” validation errors).
+    static props = {
+        action: { type: Object, optional: true },
+        context: { type: Object, optional: true },
+    };
+
+
+
 
     setup() {
         this.rpc = rpc;
@@ -148,6 +158,7 @@ export class WhatsAppDashboard extends Component {
 
             // Subaccounts
             subaccounts: [],
+            selectedSubaccountId: null,  // ID of the subaccount chosen in the dropdown
             totalPhoneNumbers: 0,
             totalSmsSent: 0,
             totalVoiceMinutes: 0,
@@ -168,10 +179,14 @@ export class WhatsAppDashboard extends Component {
                 name: "",
                 uniqueName: "",
                 email: "",
+                otp: "",
                 status: "active",
                 subaccountType: "standard",
                 capabilities: { voice: true, sms: true, mms: true, whatsapp: true }
             },
+            otpSent: false,
+            sendingOtp: false,
+            otpCooldown: 0,
             editSubaccount: {
                 id: null,
                 name: "",
@@ -183,6 +198,8 @@ export class WhatsAppDashboard extends Component {
 
         this._pollInterval = null;
         this._lastMsgId = 0;
+
+        this._pendingSubaccountId = null;
 
         onMounted(() => this._init());
         onWillUnmount(() => this._cleanup());
@@ -285,6 +302,50 @@ export class WhatsAppDashboard extends Component {
             (this.state.pendingFile && this.state.pendingFile.attachmentId);
     }
 
+    get hasActiveNumber() {
+        return this.state.myNumbers.some(n => n.status.toLowerCase() === 'active' && n.is_sending_number === true);
+    }
+
+    async setActiveNumber(number) {
+        if (!number || !number.id) return;
+        try {
+            await this.rpc('/whatsapp_dashboard/set_active_number', { number_id: number.id });
+            this.notification.add('Active number updated', { type: 'success' });
+            await this._loadPurchasedNumbers();
+        } catch (e) {
+            this.notification.add('Error updating active number', { type: 'danger' });
+        }
+    }
+
+    async deletePurchasedNumber(number) {
+        if (!number || !number.id) return;
+        if (!confirm(`Delete number ${number.number}?`)) return;
+        try {
+            await this.rpc('/whatsapp_dashboard/delete_purchased_number', { number_id: number.id });
+            this.notification.add('Number deleted', { type: 'success' });
+            await this._loadPurchasedNumbers();
+        } catch (e) {
+            this.notification.add('Error deleting number', { type: 'danger' });
+        }
+    }
+
+    async togglePurchasedNumberStatus(number) {
+        if (!number || !number.id) return;
+        try {
+            const res = await this.rpc(
+                '/whatsapp_dashboard/toggle_purchased_number_status',
+                { number_id: number.id }
+            );
+            this.notification.add(`Number ${res.new_status}`, { type: 'success' });
+            await this._loadPurchasedNumbers();
+        } catch (e) {
+            this.notification.add('Error toggling status', { type: 'danger' });
+        }
+    }
+
+
+
+
     // ========== THREAD / MESSAGE FUNCTIONS ==========
 
     async selectThread(thread) {
@@ -348,11 +409,26 @@ export class WhatsAppDashboard extends Component {
     // ========== SEND MESSAGE ==========
 
     async sendMessage() {
+        // ── New guard ──────────────────────────────────────────────────────
+        if (!this.hasActiveNumber) {
+            this.notification.add(
+                'You need an active WhatsApp number to send messages. Please buy a number first.',
+                { type: 'danger', sticky: true }
+            );
+            return;
+        }
+        // ── rest of your existing sendMessage code ────────────────────────
         const body = this.state.draftMessage.trim();
         const hasFile = this.state.pendingFile && this.state.pendingFile.attachmentId;
         if (!body && !hasFile) return;
 
-        const displayBody = hasFile ? (body || this.state.pendingFile.name) : body;
+        // IMPORTANT: do NOT fall back to the filename here. The attachment
+        // card already displays the filename/size/download icon, so if we
+        // also put the filename into the message body it renders a second
+        // time as a plain text bubble underneath — which is the duplicate
+        // you were seeing. Body should stay empty unless the user actually
+        // typed a caption.
+        const displayBody = body;
 
         const optimistic = {
             id: Date.now(),
@@ -383,7 +459,10 @@ export class WhatsAppDashboard extends Component {
 
         const t = this.state.threads.find((x) => x.id === this.state.activeThread.id);
         if (t) {
-            t.last_message = displayBody;
+            // Thread sidebar preview can still show something useful even
+            // when there's no caption — but this is only the sidebar list
+            // preview text, separate from the chat bubble itself.
+            t.last_message = displayBody || (hasFile ? `📎 ${this.state.pendingFile.name}` : "");
             t.time = currentTime();
         }
 
@@ -394,7 +473,7 @@ export class WhatsAppDashboard extends Component {
         try {
             const res = await this.rpc("/whatsapp_dashboard/send_message", {
                 thread_id: this.state.activeThread.id,
-                body: body || (hasFile ? this.state.pendingFile.name : ""),
+                body: body,
                 msg_type: this.state.msgType,
                 media_id: hasFile ? this.state.pendingFile.attachmentId : null,
             });
@@ -597,6 +676,8 @@ export class WhatsAppDashboard extends Component {
             this.state.currentView = 'phone_numbers';
             this.state.phoneTab = 'my_numbers';
             this._loadPurchasedNumbers();
+            this.loadSubaccounts();
+
         } else if (id === 'subaccounts') {
             this.state.currentView = 'subaccounts';
             this.loadSubaccounts();
@@ -609,6 +690,7 @@ export class WhatsAppDashboard extends Component {
             }
         } else if (id === 'buy_number') {
             this.state.phoneTab = 'buy_number';
+            this.loadSubaccounts();
             this.searchNumbers();
         }
     }
@@ -667,51 +749,53 @@ export class WhatsAppDashboard extends Component {
     }
 
     async buyNumber(number) {
+        // Clicking "Buy Number" should open the same Stripe payment modal UI
+        // (including card element) as the subscription "Confirm Payment".
         if (!number || !number.number) return;
+
         const phoneNumber = number.number;
         const amount = parseFloat(number.monthlyCost) || 5.00;
 
-        try {
-            this.notification.add('Preparing payment...', {type: 'info'});
-            const intentRes = await this.rpc("/whatsapp_dashboard/stripe/create_payment_intent", {
-                amount: amount,
-                currency: 'usd',
-                description: `Purchase number ${phoneNumber}`,
-                phone_number: phoneNumber,
-            });
+        // store selection for later payment flow
+        const subaccountId = this.state.selectedSubaccountId || null;
+        this._pendingSubaccountId = subaccountId;
 
-            if (intentRes.error) {
-                this.notification.add('Error: ' + intentRes.error, {type: 'danger'});
-                return;
-            }
+        // store selected purchase info
+        this.state.phoneNumber = phoneNumber;
+        this.state.paymentAmount = amount.toString();
+        this.state.paymentPlan = 'Number Purchase';
+        this.state.paymentDescription = `Purchase ${phoneNumber}`;
 
-            // Open modal with the client_secret
-            this.state.clientSecret = intentRes.client_secret;
-            this.state.paymentIntentId = intentRes.payment_intent_id;
-            this.state.phoneNumber = phoneNumber;
-            this.state.paymentAmount = amount.toString();
-            this.state.paymentPlan = 'Number Purchase';
-            this.state.paymentDescription = `Purchase ${phoneNumber}`;
-            this.state.showPaymentModal = true;
-            this.state.paymentError = null;
-            this.state.isProcessingPayment = false;
-            this.state.cardHolderName = "";
-            this.state.cardEmail = "";
-            this.state.cardCountry = "US";
-            this.state.cardZip = "";
-        } catch (e) {
-            this.notification.add('Payment initiation failed: ' + (e.message || e), {type: 'danger'});
-        }
+        // Ensure modal creates a new PaymentIntent for this purchase
+        this.state.clientSecret = null;
+        this.state.paymentIntentId = null;
+        this.state.paymentError = null;
+        this.state.isProcessingPayment = false;
+
+        this.openPaymentModal('Number Purchase', this.state.paymentAmount, `Purchase ${phoneNumber}`);
     }
 
 
     // ========== STRIPE PAYMENT ==========
 
     async _setupCardElement() {
-        // Wait a tick for the modal DOM to render
-        await new Promise((resolve) => setTimeout(resolve, 100));
-
+        // Wait until modal DOM is actually rendered (Owl render timing varies).
         if (this.state.cardElement) return;
+
+        const mountPointSelector = "#card-element";
+        const deadline = Date.now() + 2000; // 2s timeout
+        let mountPoint = null;
+
+        while (Date.now() < deadline) {
+            mountPoint = document.querySelector(mountPointSelector);
+            if (mountPoint) break;
+            // eslint-disable-next-line no-await-in-loop
+            await new Promise((resolve) => setTimeout(resolve, 50));
+        }
+
+        if (!mountPoint) {
+            throw new Error("Card element mount point not found");
+        }
 
         if (!window.Stripe) {
             await this._loadStripeJS();
@@ -738,11 +822,6 @@ export class WhatsAppDashboard extends Component {
             },
             postalCode: false,
         });
-
-        const mountPoint = document.querySelector("#card-element");
-        if (!mountPoint) {
-            throw new Error("Card element mount point not found");
-        }
 
         cardElement.mount(mountPoint);
 
@@ -883,7 +962,8 @@ export class WhatsAppDashboard extends Component {
                         name: this.state.cardHolderName,
                         email: this.state.cardEmail,
                         address: {
-                            postal_code: this.state.cardZip || '12345',
+                            postal_code: (this.state.cardZip && this.state.cardZip.trim()) || undefined,
+                            country: this.state.cardCountry || 'US',
                         },
                     },
                 },
@@ -900,14 +980,18 @@ export class WhatsAppDashboard extends Component {
                 // If we have a phone number, it's a number purchase → buy it
                 if (this.state.phoneNumber) {
                     try {
+                        const subaccountId = this._pendingSubaccountId || null;
                         const purchaseRes = await this.rpc("/whatsapp_dashboard/purchase_number", {
                             number: this.state.phoneNumber,
                             friendly_name: this.state.phoneNumber,
+                            subaccount_id: subaccountId,
                         });
                         if (purchaseRes.success) {
                             this.notification.add('Number purchased successfully!', {type: 'success'});
                             await this._loadPurchasedNumbers(); // refresh list
+                            this.state.phoneTab = 'my_numbers'; // switch to "My Numbers"
                         } else {
+
                             this.notification.add('Purchase failed: ' + (purchaseRes.error || 'Unknown error'), {type: 'danger'});
                         }
                     } catch (e) {
@@ -979,10 +1063,55 @@ export class WhatsAppDashboard extends Component {
             name: "",
             uniqueName: "",
             email: "",
+            otp: "",
             status: "active",
             subaccountType: "standard",
             capabilities: { voice: true, sms: true, mms: true, whatsapp: true }
         };
+        this.state.otpSent = false;
+        this.state.sendingOtp = false;
+        this.state.otpCooldown = 0;
+    }
+
+    async sendSubaccountOtp() {
+        const data = this.state.newSubaccount;
+        const email = (data.email || "").trim();
+
+        if (!email) {
+            this.notification.add("Please enter an email address first.", { type: "danger" });
+            return;
+        }
+        if (this.state.sendingOtp || this.state.otpCooldown > 0) return;
+
+        this.state.sendingOtp = true;
+        try {
+            const res = await this.rpc("/whatsapp_dashboard/subaccount/send_otp", { email });
+
+            if (res.error) {
+                this.notification.add(res.error, { type: "danger" });
+                return;
+            }
+
+            this.state.otpSent = true;
+            this.state.newSubaccount.otp = "";
+            this.notification.add(res.message || "OTP sent to your email.", { type: "success" });
+            this._startOtpCooldown(30);
+        } catch (e) {
+            this.notification.add("Failed to send OTP.", { type: "danger" });
+        } finally {
+            this.state.sendingOtp = false;
+        }
+    }
+
+    _startOtpCooldown(seconds) {
+        this.state.otpCooldown = seconds;
+        const tick = () => {
+            this.state.otpCooldown -= 1;
+            if (this.state.otpCooldown > 0) {
+                setTimeout(tick, 1000);
+            }
+        };
+        setTimeout(tick, 1000);
     }
 
     closeCreateModal() {
@@ -998,12 +1127,23 @@ export class WhatsAppDashboard extends Component {
             return;
         }
 
+        if (!this.state.otpSent) {
+            this.notification.add("Please send and verify the OTP sent to your email first.", {type: "danger"});
+            return;
+        }
+
+        if (!data.otp || !data.otp.trim()) {
+            this.notification.add("Please enter the OTP code sent to your email.", {type: "danger"});
+            return;
+        }
+
         this.state.creating = true;
         try {
             const res = await this.rpc("/whatsapp_dashboard/subaccount/create", {
                 name: data.name,
                 unique_name: data.uniqueName,
                 email: data.email,
+                otp: data.otp.trim(),
                 status: data.status,
                 subaccount_type: data.subaccountType,
                 voice: data.capabilities.voice,
