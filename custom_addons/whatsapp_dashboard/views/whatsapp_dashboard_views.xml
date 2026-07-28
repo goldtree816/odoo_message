@@ -100,6 +100,8 @@
                                     <field name="message_type"/>
                                     <field name="status"/>
                                     <field name="timestamp"/>
+                                    <field name="is_spam"/>
+                                    <field name="spam_score"/>
                                 </list>
                                 <form>
                                     <group>
@@ -108,6 +110,9 @@
                                         <field name="message_type"/>
                                         <field name="status"/>
                                         <field name="timestamp"/>
+                                        <field name="is_spam"/>
+                                        <field name="spam_score"/>
+                                        <field name="spam_reasons"/>
                                     </group>
                                 </form>
                             </field>
