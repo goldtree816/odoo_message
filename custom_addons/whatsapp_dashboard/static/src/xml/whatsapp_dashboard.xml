@@ -252,8 +252,17 @@
                         </div>
                     </div>
 
+                    <t t-if="!hasActiveNumber &amp;&amp; state.activeThread">
+                        <div class="wa-no-number-banner" style="padding:10px 16px;background:#fff3cd;color:#856404;text-align:center;border-bottom:1px solid #ffeeba;font-size:14px;">
+                            ⚠️ You don&apos;t have an active WhatsApp number.
+                            <a t-on-click="() => this.setNavItem('phone_numbers')" style="color:#0066cc;cursor:pointer;text-decoration:underline;font-weight:600;">Buy a number</a> to start sending messages.
+
+                        </div>
+                    </t>
+
                     <!-- Messages -->
                     <div class="wa-messages" t-ref="messages">
+
                         <div class="wa-date-chip"><span>Today</span></div>
                         <t t-foreach="state.messages" t-as="msg" t-key="msg.id">
                             <div class="wa-msg-row" t-att-class="msg.direction === 'outgoing' ? 'wa-msg-row--out' : 'wa-msg-row--in'">
@@ -284,6 +293,11 @@
                                     </t>
                                     <t t-if="msg.body">
                                         <span class="wa-bubble-text"><t t-esc="msg.body"/></span>
+                                    </t>
+                                    <t t-if="msg.is_spam">
+                                        <span class="wa-spam-badge" style="color:#f15c6d;font-size:10px;margin-left:6px;background:#fff0f0;padding:2px 6px;border-radius:10px;display:inline-block;margin-top:4px;">
+                                            ⚠️ Spam
+                                        </span>
                                     </t>
                                     <span class="wa-bubble-footer">
                                         <span class="wa-bubble-time"><t t-esc="msg.time"/></span>
@@ -374,12 +388,15 @@
 
                     <!-- Input bar -->
                     <div class="wa-input-bar">
-                        <button class="wa-icon-btn wa-icon-btn--lg" title="Attach file" t-on-click="toggleAttachMenu">
+                        <button class="wa-icon-btn wa-icon-btn--lg" title="Attach file"
+                                t-on-click="toggleAttachMenu"
+                                t-att-disabled="!hasActiveNumber">
                             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#8696a0" stroke-width="2">
                                 <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/>
                             </svg>
                         </button>
-                        <button class="wa-icon-btn wa-icon-btn--lg" title="Emoji">
+                        <button class="wa-icon-btn wa-icon-btn--lg" title="Emoji"
+                                t-att-disabled="!hasActiveNumber">
                             <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#8696a0" stroke-width="2">
                                 <circle cx="12" cy="12" r="10"/>
                                 <path d="M8 14s1.5 2 4 2 4-2 4-2"/>
@@ -390,11 +407,18 @@
                         <t t-if="state.msgType == 'internal'">
                             <span class="wa-internal-badge">Internal Note</span>
                         </t>
-                        <input class="wa-input-field" t-att-class="{'wa-input-field--internal': state.msgType == 'internal'}"
-                            type="text"
-                            t-att-placeholder="state.msgType == 'internal' ? 'Write an internal note...' : 'Type a message'"
-                            t-model="state.draftMessage" t-on-keydown="onKeyDown"/>
-                        <button class="wa-note-toggle" t-att-class="{'wa-note-toggle--active': state.msgType == 'internal'}" title="Toggle internal note" t-on-click="toggleMsgType">
+                        <input class="wa-input-field"
+                               t-att-class="{'wa-input-field--internal': state.msgType == 'internal'}"
+                               type="text"
+                                t-att-placeholder="!hasActiveNumber ? 'No active WhatsApp number - buy one first' : (state.msgType == 'internal' ? 'Write an internal note...' : 'Type a message')"
+                               t-model="state.draftMessage"
+                               t-on-keydown="onKeyDown"
+                               t-att-disabled="!hasActiveNumber"/>
+                        <button class="wa-note-toggle"
+                                t-att-class="{'wa-note-toggle--active': state.msgType == 'internal'}"
+                                title="Toggle internal note"
+                                t-on-click="toggleMsgType"
+                                t-att-disabled="!hasActiveNumber">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
                                 <polyline points="14 2 14 8 20 8"/>
@@ -402,13 +426,18 @@
                                 <line x1="16" y1="17" x2="8" y2="17"/>
                             </svg>
                         </button>
-                        <button class="wa-send-btn" t-att-class="{'wa-send-btn--active': canSend}" title="Send" t-on-click="sendMessage">
+                        <button class="wa-send-btn"
+                                t-att-class="{'wa-send-btn--active': canSend &amp;&amp; hasActiveNumber}"
+                                title="Send"
+                                t-on-click="sendMessage"
+                                t-att-disabled="!hasActiveNumber || !canSend">
                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2">
                                 <line x1="22" y1="2" x2="11" y2="13"/>
                                 <polygon points="22 2 15 22 11 13 2 9 22 2"/>
                             </svg>
                         </button>
                     </div>
+
 
                     <!-- Contact info panel -->
                     <t t-if="state.showInfoPanel">
@@ -498,18 +527,31 @@
                         <div class="wa-number-info">
                             <span class="wa-number" t-esc="num.number"/>
                             <span class="wa-number-status" t-att-class="num.status == 'Active' ? 'wa-number-status--active' : 'wa-number-status--pending'" t-esc="num.status"/>
+                            <t t-if="num.is_sending_number">
+                                <span class="wa-badge" style="background:#25D366;color:white;margin-left:8px;">Active for Sending</span>
+                            </t>
                         </div>
                         <div class="wa-number-actions">
-                            <button class="wa-btn-sm">Configure</button>
-                            <button class="wa-btn-confirm-payment" t-on-click="() => this.openPaymentModal('Phone Number Plan', '5.00')">
-                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <rect x="1" y="4" width="22" height="16" rx="2"/>
-                                    <line x1="1" y1="10" x2="23" y2="10"/>
-                                </svg>
-                                Confirm Payment
-                            </button>
-                            <button class="wa-btn-sm wa-btn-danger">Delete</button>
+                            <!-- Set as Active (only if status is Active and not already sending) -->
+                            <t t-if="num.status == 'Active' and !num.is_sending_number">
+                                <button class="wa-btn-sm" t-on-click="() => this.setActiveNumber(num)">Set as Active</button>
+                            </t>
+                            <t t-if="num.is_sending_number">
+                                <button class="wa-btn-sm" t-att-disabled="true" style="opacity:0.6;">Active</button>
+                            </t>
+
+                            <!-- Toggle status: if Active -> Suspend, if Suspended -> Activate -->
+                            <t t-if="num.status == 'Active'">
+                                <button class="wa-btn-sm" t-on-click="() => this.togglePurchasedNumberStatus(num)">Suspend</button>
+                            </t>
+                            <t t-elif="num.status == 'Suspended'">
+                                <button class="wa-btn-sm" t-on-click="() => this.togglePurchasedNumberStatus(num)">Activate</button>
+                            </t>
+
+                            <!-- Delete -->
+                            <button class="wa-btn-sm wa-btn-danger" t-on-click="() => this.deletePurchasedNumber(num)">Delete</button>
                         </div>
+
                     </div>
                 </t>
             </div>
@@ -534,6 +576,16 @@
             <div class="wa-buy-content">
                 <div class="wa-buy-filters">
                     <div class="wa-filter-group">
+                        <label>Subaccount</label>
+                        <select t-model="state.selectedSubaccountId">
+                            <option value="">-- Select Subaccount --</option>
+                            <t t-foreach="state.subaccounts" t-as="sub" t-key="sub.id">
+                                <option t-att-value="sub.id"><t t-esc="sub.name"/></option>
+                            </t>
+                        </select>
+                    </div>
+
+                    <div class="wa-filter-group">
                         <label>Country</label>
                         <select t-model="state.buyCountry">
                             <option value="NP">Nepal (+977)</option>
@@ -544,6 +596,7 @@
                             <option value="AU">Australia (+61)</option>
                         </select>
                     </div>
+
                     <button class="wa-btn-primary" t-on-click="searchNumbers" t-att-disabled="state.isLoadingNumbers">
                         <t t-if="state.isLoadingNumbers">Searching...</t>
                         <t t-else="">Search Numbers</t>
@@ -967,9 +1020,30 @@
                                 <input class="wa-form-input" type="text" t-model="state.newSubaccount.uniqueName" placeholder="customer_a"/>
                             </div>
                             <div class="wa-form-group">
-                                <label>Email</label>
-                                <input class="wa-form-input" type="email" t-model="state.newSubaccount.email" placeholder="admin@customer-a.com"/>
+                                <label>Email <span class="wa-required">*</span></label>
+                                <div class="wa-otp-email-row" style="display:flex; gap:8px;">
+                                    <input class="wa-form-input" type="email" t-model="state.newSubaccount.email"
+                                           placeholder="admin@customer-a.com" t-att-disabled="state.otpSent"/>
+                                    <button class="wa-btn wa-btn-secondary" style="white-space:nowrap;"
+                                            t-on-click="sendSubaccountOtp"
+                                            t-att-disabled="state.sendingOtp or state.otpCooldown > 0">
+                                        <t t-if="state.sendingOtp">Sending...</t>
+                                        <t t-elif="state.otpCooldown > 0"><t t-esc="state.otpCooldown"/>s</t>
+                                        <t t-elif="state.otpSent">Resend OTP</t>
+                                        <t t-else="">Send OTP</t>
+                                    </button>
+                                </div>
                             </div>
+                            <t t-if="state.otpSent">
+                                <div class="wa-form-group">
+                                    <label>Enter OTP <span class="wa-required">*</span></label>
+                                    <input class="wa-form-input" type="text" maxlength="6"
+                                           t-model="state.newSubaccount.otp" placeholder="6-digit code"/>
+                                    <small class="wa-form-hint">
+                                        Code sent to <t t-esc="state.newSubaccount.email"/>. Expires in 5 minutes.
+                                    </small>
+                                </div>
+                            </t>
                             <div class="wa-form-group">
                                 <label>Capabilities</label>
                                 <div class="wa-checkbox-group">
@@ -1010,7 +1084,7 @@
                         </div>
                         <div class="wa-modal-footer">
                             <button class="wa-btn wa-btn-secondary" t-on-click="closeCreateModal">Cancel</button>
-                            <button class="wa-btn wa-btn-primary" t-on-click="createSubaccount" t-att-disabled="!state.newSubaccount.name || !state.newSubaccount.uniqueName || state.creating">
+                            <button class="wa-btn wa-btn-primary" t-on-click="createSubaccount" t-att-disabled="!state.newSubaccount.name || !state.newSubaccount.uniqueName || !state.otpSent || !state.newSubaccount.otp || state.creating">
                                 <t t-if="state.creating">Creating...</t>
                                 <t t-else="">Create Subaccount</t>
                             </button>
