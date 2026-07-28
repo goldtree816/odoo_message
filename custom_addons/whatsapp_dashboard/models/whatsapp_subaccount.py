@@ -1,9 +1,14 @@
 from odoo import models, fields, api
 
 class WhatsAppSubaccount(models.Model):
+    # Represents a Twilio “subaccount” / tenant that owns WhatsApp resources.
+    # The dashboard lists subaccounts and uses them to buy numbers.
+    # (Controller will sync real Twilio credentials after Twilio API calls.)
     _name = 'whatsapp.subaccount'
     _description = 'WhatsApp Subaccount'
+    # Newest created subaccounts first.
     _order = 'create_date desc'
+
 
     name = fields.Char('Friendly Name', required=True)
     unique_name = fields.Char('Unique Name', required=True)
@@ -32,6 +37,11 @@ class WhatsAppSubaccount(models.Model):
     # ── Real Twilio credentials (set by controller after API call) ──
     sid = fields.Char('Twilio Account SID', readonly=True)
     auth_token = fields.Char('Twilio Auth Token', readonly=True)
+    # True only when `sid`/`auth_token` came back from an actual Twilio
+    # SubAccounts API call. False means these are locally-generated
+    # placeholders (used when the Twilio call failed) and must NEVER be
+    # used to authenticate real Twilio API requests.
+    is_real_twilio_account = fields.Boolean('Real Twilio Account', default=False, readonly=True)
 
     create_date = fields.Datetime('Created On', readonly=True)
     created_by = fields.Many2one('res.users', string='Created By',
@@ -48,10 +58,13 @@ class WhatsAppSubaccount(models.Model):
         (the controller will provide the REAL ones from Twilio).
         """
         for vals in vals_list:
-            if not vals.get('sid'):
+            if vals.get('sid') and vals.get('auth_token'):
+                # Real credentials were supplied by the controller.
+                vals.setdefault('is_real_twilio_account', True)
+            else:
                 vals['sid'] = self._generate_sid()
-            if not vals.get('auth_token'):
                 vals['auth_token'] = self._generate_auth_token()
+                vals['is_real_twilio_account'] = False
         return super(WhatsAppSubaccount, self).create(vals_list)
 
     def _generate_sid(self):
