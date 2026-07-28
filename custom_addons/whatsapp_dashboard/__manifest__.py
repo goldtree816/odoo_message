@@ -3,7 +3,7 @@
     'version': '19.0.1.0.0',
     'category': 'Discuss',
     'summary': 'WhatsApp Web-style dashboard with Twilio + Stripe integration',
-    'author': 'Custom Addons',
+    'author': 'GoldTree Group',
     'depends': ['web', 'mail', 'base', 'payment', 'payment_stripe'],
     'data': [
         'security/ir.model.access.csv',
